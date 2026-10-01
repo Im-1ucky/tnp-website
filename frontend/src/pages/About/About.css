@@ -1,0 +1,292 @@
+/* ============================= ABOUT ============================= */
+
+.about {
+  position: relative;
+  padding: 110px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.about .container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============================= LAYOUT ============================= */
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* ============================= LEFT SIDE ============================= */
+
+.about-left {
+  min-width: 0;
+}
+
+/* Eyebrow stays above the main content */
+
+.about-eyebrow {
+  height: 58px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.about .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about .eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--color-primary);
+}
+
+/* ============================= MAIN CONTENT ============================= */
+
+.about-main {
+  min-width: 0;
+}
+
+.about .section-title {
+  margin: 0 0 15px;
+
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.about .section-sub {
+  max-width: 640px;
+  margin: 0 0 15px;
+
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* ============================= ABOUT TEXT ============================= */
+
+.about-copy p {
+  margin: 0 0 14px;
+
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 450;
+  line-height: 1.7;
+}
+
+.about-copy p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================= RIGHT CARD ============================= */
+
+.about-card {
+  position: relative;
+
+  /* Align card with "About the Club" */
+  margin-top: 58px;
+
+  min-height: 460px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(20, 110, 255, 0.12),
+      transparent 55%
+    ),
+    var(--color-surface);
+
+  box-shadow: var(--shadow-md);
+
+  transition:
+    transform 0.35s var(--ease),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-primary);
+}
+
+.about-card-glow {
+  position: absolute;
+  top: -100px;
+  right: -80px;
+
+  width: 260px;
+  height: 260px;
+
+  border-radius: 50%;
+
+  background: rgba(20, 110, 255, 0.16);
+
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+.about-card-content {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  min-height: 460px;
+  padding: 36px;
+}
+
+.about-card-label {
+  margin-bottom: auto;
+
+  color: var(--color-primary);
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.about-card h3 {
+  max-width: 430px;
+  margin: 0 0 14px;
+
+  color: var(--color-text);
+
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.about-card p {
+  max-width: 430px;
+  margin: 0;
+
+  color: var(--color-text-muted);
+
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+/* ============================= TABLET ============================= */
+
+@media (max-width: 1080px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .about-card {
+    margin-top: 0;
+    min-height: 320px;
+  }
+
+  .about-card-content {
+    min-height: 320px;
+  }
+}
+
+/* ============================= MOBILE ============================= */
+
+@media (max-width: 760px) {
+  .about {
+    padding: 70px 0;
+  }
+
+  .about .container {
+    padding: 0 24px;
+  }
+
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .about-eyebrow {
+    height: auto;
+    margin-bottom: 16px;
+  }
+
+  .about .section-title {
+    font-size: 42px;
+  }
+
+  .about .section-sub {
+    margin-bottom: 40px;
+    font-size: 16px;
+  }
+
+  .about-copy p {
+    font-size: 16px;
+  }
+
+  .about-card {
+    margin-top: 0;
+    min-height: 280px;
+  }
+
+  .about-card-content {
+    min-height: 280px;
+    padding: 28px;
+  }
+
+  .about-card h3 {
+    font-size: 26px;
+  }
+}
+
+/* ============================= SMALL MOBILE ============================= */
+
+@media (max-width: 480px) {
+  .about {
+    padding: 64px 0;
+  }
+
+  .about .container {
+    padding: 0 16px;
+  }
+
+  .about .section-title {
+    font-size: 34px;
+  }
+
+  .about .section-sub {
+    font-size: 15px;
+  }
+
+  .about-card-content {
+    padding: 24px;
+  }
+}
