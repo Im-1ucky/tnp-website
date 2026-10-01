@@ -193,32 +193,23 @@ function Navbar() {
             {/* Theme toggle */}
             <button
               type="button"
-              className="theme-toggle"
+              className={`theme-toggle ${menuOpen ? "menu-open" : ""}`}
               onClick={toggleTheme}
-              aria-label={`Current theme: ${
-                theme === "dark" ? "Dark" : "Light"
-              }`}
-              title={`Current theme: ${
-                theme === "dark" ? "Dark" : "Light"
-              }`}
+              aria-label={`Switch to ${
+                theme === "dark" ? "light" : "dark"
+              } mode`}
             >
-              {theme === "dark" ? (
-                <MoonIcon />
-              ) : (
-                <SunIcon />
-              )}
+              {theme === "dark" ? <MoonIcon /> : <SunIcon />}
 
               <span>
                 {theme === "dark" ? "Dark" : "Light"}
               </span>
             </button>
 
-            {/* Mobile toggle */}
+            {/* Mobile menu toggle */}
             <button
               type="button"
-              className={`nav-toggle ${
-                menuOpen ? "open" : ""
-              }`}
+              className={`nav-toggle ${menuOpen ? "open" : ""}`}
               onClick={() => setMenuOpen((value) => !value)}
               aria-label="Toggle navigation menu"
               aria-expanded={menuOpen}
