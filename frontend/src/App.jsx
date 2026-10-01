@@ -1,5 +1,7 @@
+import Home from "./pages/Home/Home";
+
 function App() {
-  return <h1>TnP Website</h1>
+  return <Home />;
 }
 
-export default App
+export default App;

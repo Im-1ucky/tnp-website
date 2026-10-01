@@ -1,0 +1,354 @@
+/* =========================================================
+   HOME / HERO
+========================================================= */
+
+.hero {
+  position: relative;
+
+  min-height: 100svh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 140px 0 90px;
+
+  overflow: hidden;
+
+  isolation: isolate;
+}
+
+
+/* =========================================================
+   HERO VIDEO
+========================================================= */
+
+.hero-bg-video {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  max-width: none;
+
+  object-fit: cover;
+  object-position: center 60%;
+
+  z-index: -2;
+
+  pointer-events: none;
+
+  transform: scale(1.05);
+
+  will-change: transform;
+}
+
+
+/* =========================================================
+   HERO OVERLAY
+========================================================= */
+
+.hero-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: -1;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(5, 8, 13, 0.08) 0%,
+      rgba(5, 8, 13, 0.58) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(5, 8, 13, 0.48) 0%,
+      rgba(5, 8, 13, 0.16) 48%,
+      rgba(5, 8, 13, 0.78) 100%
+    );
+}
+
+
+/*
+   Light mode deliberately keeps the video visible.
+
+   We DO NOT use the old white overlay here because
+   that washed out the infrastructure video.
+*/
+
+[data-theme="light"] .hero-overlay {
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(255, 255, 255, 0.02) 0%,
+      rgba(3, 8, 15, 0.34) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(3, 8, 15, 0.34) 0%,
+      rgba(3, 8, 15, 0.08) 48%,
+      rgba(3, 8, 15, 0.55) 100%
+    );
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 960px;
+
+  margin-inline: auto;
+
+  padding-inline: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   MAIN HEADING
+========================================================= */
+
+.hero h1 {
+  margin: 0 0 18px;
+
+  max-width: 1000px;
+
+  color: #ffffff;
+
+  font-size: clamp(40px, 7vw, 84px);
+  font-weight: 900;
+
+  line-height: 0.98;
+
+  letter-spacing: -0.045em;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.9),
+    0 1px 5px rgba(0, 0, 0, 0.95);
+}
+
+
+/*
+   Keep hero text readable in light mode.
+
+   The video remains darkened rather than becoming white.
+*/
+
+[data-theme="light"] .hero h1 {
+  color: #ffffff;
+
+  text-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.85),
+    0 1px 5px rgba(0, 0, 0, 0.9);
+}
+
+
+/* =========================================================
+   COLLEGE NAME
+========================================================= */
+
+.hero .college-sub {
+  margin-bottom: 7px;
+
+  color: #ffffff;
+
+  font-size: clamp(19px, 2.7vw, 30px);
+  font-weight: 600;
+
+  line-height: 1.25;
+
+  letter-spacing: -0.015em;
+
+  text-shadow:
+    0 3px 16px rgba(0, 0, 0, 0.9);
+}
+
+
+/* =========================================================
+   INSTITUTION SUBTITLE
+========================================================= */
+
+.hero .inst-sub {
+  margin-bottom: 22px;
+
+  color: #62a0ff;
+
+  font-family: var(--font-mono);
+
+  font-size: clamp(11px, 1.3vw, 14px);
+  font-weight: 500;
+
+  line-height: 1.5;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.9);
+}
+
+
+/* =========================================================
+   TAGLINE
+========================================================= */
+
+.hero .tagline {
+  max-width: 680px;
+
+  margin: 0 0 34px;
+
+  color: #e5eaf2;
+
+  font-size: clamp(15px, 1.65vw, 18px);
+
+  line-height: 1.7;
+
+  text-shadow:
+    0 2px 14px rgba(0, 0, 0, 0.9);
+}
+
+
+/* =========================================================
+   CTA BUTTONS
+========================================================= */
+
+.hero-ctas {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+
+  flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   HERO ENTRY ANIMATIONS
+========================================================= */
+
+.hero-anim-1,
+.hero-anim-2,
+.hero-anim-3,
+.hero-anim-4,
+.hero-anim-5 {
+  opacity: 0;
+
+  transform: translateY(18px);
+
+  animation:
+    heroFadeUp 0.75s var(--ease) forwards;
+}
+
+.hero-anim-1 {
+  animation-delay: 0.1s;
+}
+
+.hero-anim-2 {
+  animation-delay: 0.22s;
+}
+
+.hero-anim-3 {
+  animation-delay: 0.35s;
+}
+
+.hero-anim-4 {
+  animation-delay: 0.48s;
+}
+
+.hero-anim-5 {
+  animation-delay: 0.61s;
+}
+
+
+@keyframes heroFadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: 100svh;
+
+    padding: 120px 0 70px;
+  }
+
+  .hero-bg-video {
+    object-position: center center;
+  }
+
+  .hero-content {
+    padding-inline: 16px;
+  }
+
+  .hero h1 {
+    margin-bottom: 16px;
+
+    font-size: clamp(38px, 13vw, 58px);
+
+    letter-spacing: -0.04em;
+  }
+
+  .hero .college-sub {
+    font-size: clamp(18px, 5vw, 24px);
+  }
+
+  .hero .inst-sub {
+    max-width: 330px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.09em;
+  }
+
+  .hero .tagline {
+    max-width: 360px;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    margin-bottom: 28px;
+  }
+
+  .hero-ctas {
+    width: 100%;
+
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+  .hero-ctas .btn {
+    width: min(100%, 300px);
+  }
+}

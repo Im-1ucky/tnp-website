@@ -1,0 +1,483 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@import "tailwindcss";
+/* =========================================================
+   TNP DESIGN SYSTEM
+   Shared across the entire website
+========================================================= */
+
+:root {
+  /* ---------- Colors ---------- */
+
+  --color-bg: #05080d;
+  --color-surface: #0a111c;
+  --color-surface-hover: #101d2d;
+
+  --color-primary: #146eff;
+  --color-primary-hover: #2f80ff;
+  --color-primary-soft: rgba(20, 110, 255, 0.12);
+
+  --color-text: #ffffff;
+  --color-text-secondary: #d6dce5;
+  --color-text-muted: #8994a5;
+
+  --color-border: #1d3048;
+  --color-border-hover: #31577f;
+
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+
+  --color-overlay: rgba(3, 8, 15, 0.5);
+
+  /* ---------- Backgrounds ---------- */
+
+  --color-glass: rgba(10, 17, 28, 0.72);
+
+  /* ---------- Borders ---------- */
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.15);
+
+  /* ---------- Typography ---------- */
+
+  --font-body:
+    "Plus Jakarta Sans",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  --font-display:
+    "Plus Jakarta Sans",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  --font-mono:
+    "JetBrains Mono",
+    "Fira Code",
+    Consolas,
+    monospace;
+
+  /* ---------- Radius ---------- */
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+
+  /* ---------- Shadows ---------- */
+
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.25);
+  --shadow-primary: 0 10px 28px rgba(20, 110, 255, 0.25);
+
+  /* ---------- Animation ---------- */
+
+  --ease: cubic-bezier(0.22, 0.9, 0.32, 1);
+}
+
+
+/* =========================================================
+   LIGHT THEME
+========================================================= */
+
+[data-theme="light"] {
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-surface-hover: #eef3f9;
+
+  --color-primary: #146eff;
+  --color-primary-hover: #0d5ed7;
+  --color-primary-soft: rgba(20, 110, 255, 0.1);
+
+  --color-text: #08111f;
+  --color-text-secondary: #263548;
+  --color-text-muted: #5d6b7d;
+
+  --color-border: #d8e0ea;
+  --color-border-hover: #aebfd3;
+
+  --color-glass: rgba(255, 255, 255, 0.78);
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.14);
+
+  --color-overlay: rgba(3, 8, 15, 0.38);
+
+  --shadow-sm: 0 4px 12px rgba(15, 30, 50, 0.08);
+  --shadow-md: 0 12px 30px rgba(15, 30, 50, 0.12);
+  --shadow-primary: 0 10px 28px rgba(20, 110, 255, 0.18);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+
+  background: var(--color-bg);
+  color: var(--color-text);
+
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+/* Desktop */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
+
+
+/* Mobile */
+@media (max-width: 640px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html {
+    scrollbar-width: none;
+  }
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+  width: min(1240px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+
+/* =========================================================
+   SHARED SECTION STYLES
+========================================================= */
+
+.section {
+  position: relative;
+
+  padding: 110px 0;
+
+  border-bottom: 1px solid var(--color-border);
+}
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-title {
+  margin: 0 0 14px;
+
+  color: var(--color-text);
+
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.section-sub {
+  max-width: 640px;
+
+  margin: 0 0 48px;
+
+  color: var(--color-text-muted);
+
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 16px;
+
+  color: var(--color-primary);
+
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+
+  width: 28px;
+  height: 1px;
+
+  flex-shrink: 0;
+
+  background: var(--color-primary);
+}
+
+
+/* =========================================================
+   GLASS
+========================================================= */
+
+.glass {
+  background: var(--color-glass);
+
+  border: 1px solid var(--color-border);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 13px 26px;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+
+  font-size: 14.5px;
+  font-weight: 600;
+
+  transition:
+    transform 0.3s var(--ease),
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  overflow: hidden;
+}
+
+.btn svg {
+  width: 16px;
+  height: 16px;
+
+  transition: transform 0.3s var(--ease);
+}
+
+.btn:hover svg {
+  transform: translateX(4px);
+}
+
+
+/* ---------- Primary ---------- */
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #ffffff;
+
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 14px 32px rgba(20, 110, 255, 0.35);
+}
+
+
+/* ---------- Ghost ---------- */
+
+.btn-ghost {
+  background: rgba(5, 8, 13, 0.45);
+
+  border-color: rgba(255, 255, 255, 0.2);
+
+  color: #ffffff;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-ghost:hover {
+  background: var(--color-primary-soft);
+
+  border-color: var(--color-primary);
+
+  transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   REVEAL ANIMATION
+   Used by sections across the website
+========================================================= */
+
+.reveal {
+  opacity: 0;
+
+  transform: translateY(28px);
+
+  filter: blur(4px);
+
+  transition:
+    opacity 0.8s var(--ease),
+    transform 0.8s var(--ease),
+    filter 0.8s var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+
+  transform: translateY(0);
+
+  filter: blur(0);
+}
+
+.stagger > * {
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE GLOBAL ADJUSTMENTS
+========================================================= */
+
+@media (max-width: 640px) {
+  .container {
+    width: min(100% - 32px, 1240px);
+  }
+
+  .section {
+    padding: 80px 0;
+  }
+
+  .section-sub {
+    margin-bottom: 36px;
+  }
+
+  .btn {
+    padding: 12px 22px;
+  }
+}
