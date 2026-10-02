@@ -61,8 +61,7 @@ function Home() {
             </div>
 
             <p className="tagline hero-anim-4">
-              Bridging Students with Opportunities — building career
-              readiness, one connection at a time.
+              Building connections, creating opportunities, shaping futures.
             </p>
 
             <div className="hero-ctas hero-anim-5">

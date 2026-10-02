@@ -22,16 +22,20 @@ function About() {
               <div className="about-copy">
                 <p>
                   From coordinating placement drives and communicating with recruiters
-                  and HR professionals, to keeping students informed and facilitating
-                  industry interactions. We play an active role in the recruitment journey,
-                  helping students understand industry expectations, engage with professionals
-                  and approach their professional journey with a clearer understanding of what lies ahead.
+                  and HR professionals to keeping students informed and facilitating
+                  industry interactions, we play an active role in the recruitment journey.
                 </p>
 
                 <p>
-                  But we extend beyond placements as a community, bringing students
+                  Beyond placements, we are a community that brings students
                   and alumni together through student led events, activities, interactions
                   and reunions while creating lasting connections across GPREC.
+                </p>
+
+                <p>
+                  Through these efforts, we help students understand industry expectations,
+                  engage with professionals and build the skills, confidence and perspective
+                  they need for the future.
                 </p>
               </div>
             </div>

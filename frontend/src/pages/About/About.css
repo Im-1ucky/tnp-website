@@ -2,13 +2,13 @@
 
 .about {
   position: relative;
-  padding: 110px 0;
+  padding: 11px 0;
   border-bottom: 1px solid var(--color-border);
 }
 
 .about .container {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1600px;    /*    Change this value to increase width of about section      */
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -31,7 +31,7 @@
 /* Eyebrow stays above the main content */
 
 .about-eyebrow {
-  height: 58px;
+  height: 40px;
   display: flex;
   align-items: flex-start;
 }
@@ -105,8 +105,7 @@
 .about-card {
   position: relative;
 
-  /* Align card with "About the Club" */
-  margin-top: 58px;
+  margin-top: 10px;              /*     To increase/decrease the space above card      */
 
   min-height: 460px;
 
