@@ -36,6 +36,11 @@ function About() {
             <div className="about-main">
               <h2 className="section-title">About Us</h2>
 
+              {/* Mobile card */}
+              <div className="about-card-wrapper about-card-mobile">
+                <AboutCardStack cards={communityCards} />
+              </div>
+
               <p className="section-sub">
                 The Training &amp; Placement Club connects students with opportunities,
                 industry and the GPREC community.
@@ -63,9 +68,9 @@ function About() {
             </div>
           </div>
 
-          {/* Right side */}
+          {/* Desktop / tablet card */}
 
-          <div className="about-card-wrapper">
+          <div className="about-card-wrapper about-card-desktop">
             <AboutCardStack cards={communityCards} />
           </div>
         </div>

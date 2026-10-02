@@ -134,7 +134,7 @@ function AboutCardStack({ cards }) {
         /*
          * Only keep the front three cards rendered.
          */
-        if (position > 2) return null;
+        if (position > 1) return null;
 
         const isActive = position === 0;
 
@@ -198,9 +198,6 @@ function AboutCardStack({ cards }) {
 
             {isActive && (
               <>
-                {/* <div className="about-card-label">
-                  {card.title}
-                </div>*/}  {     /* Use this if wanna change card title style*/     }
 
                 <div className="about-card-content">
                   <h3>{card.title}</h3>

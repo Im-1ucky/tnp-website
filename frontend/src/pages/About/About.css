@@ -13,6 +13,14 @@
   padding: 0 24px;
 }
 
+.about-card-mobile {
+  display: none;
+}
+
+.about-card-desktop {
+  display: block;
+}
+
 /* ============================= LAYOUT ============================= */
 
 .about-layout {
@@ -108,8 +116,6 @@
   min-height: 460px;
 }
 
-
-
 /* ============================= TABLET ============================= */
 
 @media (max-width: 1080px) {
@@ -127,8 +133,9 @@
 /* ============================= MOBILE ============================= */
 
 @media (max-width: 760px) {
+
   .about {
-    padding: 70px 0;
+    padding-top: 30px !important;
   }
 
   .about .container {
@@ -144,8 +151,18 @@
     font-size: 42px;
   }
 
+  .about-card-mobile {
+    display: block;
+    min-height: 320px;
+    margin: 20px 0 10px;
+  }
+
+  .about-card-desktop {
+    display: none !important;
+  }
+
   .about .section-sub {
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     font-size: 16px;
   }
 
@@ -157,9 +174,6 @@
 /* ============================= SMALL MOBILE ============================= */
 
 @media (max-width: 480px) {
-  .about {
-    padding: 64px 0;
-  }
 
   .about .container {
     padding: 0 16px;
