@@ -156,7 +156,7 @@ function Team() {
   }
 
   return (
-    <section className="section team" id="batches">
+    <section className="section team" id="teams">
       <div className="container">
 
         {/* Section heading */}
