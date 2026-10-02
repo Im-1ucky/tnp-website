@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./AboutCardStack.css";
 
-function AboutCardStack({ cards }) {
+function AboutCardStack({ cards, mobile = false }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -132,9 +132,9 @@ function AboutCardStack({ cards }) {
           cards.length;
 
         /*
-         * Only keep the front three cards rendered.
+         * Only keep the front two cards rendered for desktop and one for mobile.
          */
-        if (position > 1) return null;
+        if (position > (mobile ? 1 : 2)) return null;
 
         const isActive = position === 0;
 

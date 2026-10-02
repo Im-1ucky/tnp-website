@@ -36,9 +36,9 @@ function About() {
             <div className="about-main">
               <h2 className="section-title">About Us</h2>
 
-              {/* Mobile card */}
+              {/* Mobile */}
               <div className="about-card-wrapper about-card-mobile">
-                <AboutCardStack cards={communityCards} />
+                <AboutCardStack cards={communityCards} mobile />
               </div>
 
               <p className="section-sub">
@@ -68,8 +68,7 @@ function About() {
             </div>
           </div>
 
-          {/* Desktop / tablet card */}
-
+          {/* Desktop / Tablet */}
           <div className="about-card-wrapper about-card-desktop">
             <AboutCardStack cards={communityCards} />
           </div>
