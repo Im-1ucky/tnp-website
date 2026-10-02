@@ -1,11 +1,33 @@
+import AboutCardStack from "../../components/AboutCardStack/AboutCardStack";
 import "./About.css";
+
+const communityCards = [
+  {
+    image: "/assets/AboutStack/community.jpg",
+    title: "Our Community",
+  },
+  {
+    image: "/assets/AboutStack/alumni.jpg",
+    title: "Connections That Last",
+  },
+  {
+    image: "/assets/AboutStack/placement.jpg",
+    title: "Professional Interactions",
+  },
+  {
+    image: "/assets/AboutStack/event.jpg",
+    title: "Beyond the Classroom",
+  },
+];
 
 function About() {
   return (
     <section className="section about" id="about">
       <div className="container">
         <div className="about-layout">
+
           {/* Left side */}
+
           <div className="about-left">
             <div className="about-eyebrow">
               <div className="eyebrow">Who We Are</div>
@@ -42,22 +64,9 @@ function About() {
           </div>
 
           {/* Right side */}
-          <div className="about-card">
-            <div className="about-card-glow" />
 
-            <div className="about-card-content">
-              <span className="about-card-label">OUR COMMUNITY</span>
-
-              <h3>
-                Connecting students with the opportunities beyond the
-                classroom.
-              </h3>
-
-              <p>
-                A space where students, recruiters and alumni come together
-                through placements, events and meaningful interactions.
-              </p>
-            </div>
+          <div className="about-card-wrapper">
+            <AboutCardStack cards={communityCards} />
           </div>
         </div>
       </div>

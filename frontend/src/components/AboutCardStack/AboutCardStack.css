@@ -1,0 +1,374 @@
+/* =========================================================
+   ABOUT CARD STACK
+========================================================= */
+
+.about-card-stack {
+  position: relative;
+
+  width: 100%;
+  height: 460px;
+
+  perspective: 1000px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.about-card {
+  position: absolute;
+  inset: 0;
+
+  min-height: 460px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background: var(--color-surface);
+
+  box-shadow: var(--shadow-md);
+
+  user-select: none;
+
+  /*
+   * Allows vertical page scrolling on mobile
+   * while still allowing horizontal swiping.
+   */
+  touch-action: pan-y;
+
+  transition:
+    transform 0.45s var(--ease),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    opacity 0.35s ease;
+}
+
+
+/* =========================================================
+   CARD POSITIONS
+========================================================= */
+
+/*
+ * Front card
+ */
+
+.about-card-position-0 {
+  z-index: 3;
+  opacity: 1;
+}
+
+
+/*
+ * Second card
+ */
+
+.about-card-position-1 {
+  z-index: 2;
+
+  transform:
+    translateX(14px)
+    translateY(10px)
+    rotate(1.2deg);
+
+  opacity: 0.85;
+}
+
+
+/*
+ * Third card
+ */
+
+.about-card-position-2 {
+  z-index: 1;
+
+  transform:
+    translateX(28px)
+    translateY(20px)
+    rotate(2.4deg);
+
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   ACTIVE CARD
+========================================================= */
+
+.about-card-active {
+  cursor: grab;
+}
+
+.about-card-active:active {
+  cursor: grabbing;
+}
+
+.about-card.is-dragging {
+  transition: none;
+}
+
+
+/* =========================================================
+   HOVER
+   Only enabled on devices with a real mouse/trackpad.
+========================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+  .about-card-active:hover {
+    border-color: var(--color-border-hover);
+
+    box-shadow: var(--shadow-primary);
+  }
+
+  .about-card-active:hover .about-card-image {
+    transform: scale(1.025);
+  }
+}
+
+
+/* =========================================================
+   NON-ACTIVE CARDS
+========================================================= */
+
+.about-card:not(.about-card-active) {
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.about-card-image {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  max-width: none;
+
+  object-fit: cover;
+
+  pointer-events: none;
+
+  transition:
+    transform 0.6s var(--ease);
+}
+
+
+/* =========================================================
+   IMAGE OVERLAY
+========================================================= */
+
+.about-card-overlay {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 8, 13, 0.05) 0%,
+      rgba(5, 8, 13, 0.12) 40%,
+      rgba(5, 8, 13, 0.55) 68%,
+      rgba(5, 8, 13, 0.94) 100%
+    );
+}
+
+
+/* =========================================================
+   CARD LABEL
+========================================================= */
+
+.about-card-label {
+  position: absolute;
+  top: 36px;
+  left: 36px;
+  z-index: 2;
+
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
+.about-card-content {
+  position: absolute;
+
+  left: 36px;
+  right: 36px;
+  bottom: 36px;
+
+  z-index: 2;
+
+  pointer-events: none;
+}
+
+.about-card h3 {
+  max-width: 430px;
+
+  margin: 0;
+
+  color: var(--color-primary);
+
+  font-family: var(--font-display);
+
+  font-size: clamp(12px, 1.6vw, 20px);
+
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  letter-spacing: -0.025em;
+}
+
+
+/* =========================================================
+   DRAG HINT
+========================================================= */
+
+.about-card-hint {
+  position: absolute;
+
+  right: 36px;
+  bottom: 40px;
+
+  z-index: 3;
+
+  color: rgba(255, 255, 255, 0.65);
+
+  font-family: var(--font-mono);
+
+  font-size: 10px;
+
+  letter-spacing: 0.08em;
+
+  pointer-events: none;
+
+  animation:
+    aboutCardHint 3s ease forwards;
+}
+
+@keyframes aboutCardHint {
+  0% {
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.45;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1080px) {
+  .about-card-stack {
+    height: 320px;
+  }
+
+  .about-card {
+    min-height: 320px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 760px) {
+  .about-card-stack {
+    height: 320px;
+  }
+
+  .about-card {
+    min-height: 320px;
+  }
+
+  .about-card-content {
+    left: 28px;
+    right: 28px;
+    bottom: 28px;
+  }
+
+  .about-card h3 {
+    font-size: 26px;
+  }
+
+  .about-card-hint {
+    right: 28px;
+    bottom: 30px;
+  }
+
+  /*
+   * Smaller stack offsets on mobile.
+   */
+
+  .about-card-position-1 {
+    transform:
+      translateX(9px)
+      translateY(7px)
+      rotate(1deg);
+  }
+
+  .about-card-position-2 {
+    transform:
+      translateX(18px)
+      translateY(14px)
+      rotate(1.8deg);
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .about-card-stack {
+    height: 280px;
+  }
+
+  .about-card {
+    min-height: 280px;
+  }
+
+  .about-card-content {
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+  }
+
+  .about-card h3 {
+    font-size: 26px;
+  }
+
+  .about-card-hint {
+    right: 24px;
+    bottom: 26px;
+  }
+}
