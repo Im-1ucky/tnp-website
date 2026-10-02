@@ -368,6 +368,15 @@
   line-height: 1.2;
 }
 
+.team-member-roll {
+  margin: 7px 0 0;
+
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
 
 /* =========================
    EMPTY STATE
@@ -400,6 +409,11 @@
    ========================= */
 
 @media (max-width: 700px) {
+
+    .team {
+      padding-top: 0px !important;
+    }
+
   .team-head {
     margin-bottom: 30px;
   }

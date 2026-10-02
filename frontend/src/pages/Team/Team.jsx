@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { members } from "../../data/members";
+import TeamCard from "./TeamCard/TeamCard";
 import "./Team.css";
 
 function getInitials(name) {
@@ -47,13 +48,21 @@ function MemberPhoto({ member }) {
   );
 }
 
-function TeamMemberCard({ member }) {
+function TeamMemberCard({ member, onClick }) {
   return (
-    <article className="team-member-card">
+    <article
+      className="team-member-card"
+      onClick={onClick}
+
+    >
       <MemberPhoto member={member} />
 
       <div className="team-member-content">
         <h3>{member.name}</h3>
+
+        <p className="team-member-roll">
+          {member.rollNo}
+        </p>
 
         {member.role && (
           <p className="team-member-role">
@@ -78,6 +87,7 @@ function Team() {
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState("All");
   const [selectedTeam, setSelectedTeam] = useState("All");
+  const [selectedMember, setSelectedMember] = useState(null);
 
   // Embla handles the infinite loop.
   const [emblaRef] = useEmblaCarousel(
@@ -272,6 +282,7 @@ function Team() {
               <TeamMemberCard
                 key={member.id}
                 member={member}
+                onClick={() => setSelectedMember(member)}
               />
             ))}
           </div>
@@ -281,6 +292,13 @@ function Team() {
           <div className="team-empty">
             No members found for the selected filters.
           </div>
+        )}
+
+        {selectedMember && (
+          <TeamCard
+            member={selectedMember}
+            onClose={() => setSelectedMember(null)}
+          />
         )}
 
       </div>
