@@ -70,7 +70,7 @@ function Home() {
                 <ArrowIcon />
               </a>
 
-              <a href="#batches" className="btn btn-ghost">
+              <a href="#teams" className="btn btn-ghost">
                 Meet Our Team
                 <ArrowIcon />
               </a>
