@@ -166,6 +166,48 @@
   box-shadow: 0 0 0 3px var(--color-primary-soft);
 }
 
+/* =========================
+   DESCRIPTION
+   ========================= */
+
+   .team-description {
+     width: 100%;
+     margin-bottom: 22px;
+     padding: 16px 18px;
+     border: 1px solid var(--color-border);
+     border-left: 2px solid var(--color-primary);
+     border-radius: var(--radius-md);
+     background: var(--color-surface);
+   }
+
+   .team-description-heading {
+     display: flex;
+     align-items: center;
+     gap: 9px;
+     margin-bottom: 5px;
+   }
+
+   .team-description-icon {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: var(--color-primary);
+   }
+
+   .team-description-content h3 {
+     margin: 0;
+     color: var(--color-text);
+     font-size: 16px;
+     font-weight: 700;
+   }
+
+   .team-description-content p {
+     max-width: 760px;
+     margin: 0;
+     color: var(--color-text-muted);
+     font-size: 13px;
+     line-height: 1.6;
+   }
 
 /* =========================
    RESULTS

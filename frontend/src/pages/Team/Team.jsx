@@ -3,7 +3,25 @@ import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { members } from "../../data/members";
 import TeamCard from "./TeamCard/TeamCard";
+import { teams } from "../../data/teams";
 import "./Team.css";
+
+import {
+  Pen,
+  FileText,
+  Table2,
+  CircleCheck,
+  Handshake,
+} from "lucide-react";
+
+const teamIcons = {
+  Pen,
+  FileText,
+  Table2,
+  CircleCheck,
+  Handshake,
+};
+
 
 function getInitials(name) {
   return name
@@ -126,10 +144,23 @@ function Team() {
       .sort();
   }, [batchMembers]);
 
-  const teams = useMemo(() => {
-    return [...new Set(batchMembers.map((member) => member.team))]
-      .sort();
+  const availableTeams = useMemo(() => {
+    const batchTeamNames = new Set(
+      batchMembers.map((member) => member.team)
+    );
+
+    return teams.filter((team) => batchTeamNames.has(team.name));
   }, [batchMembers]);
+
+  const selectedTeamInfo = useMemo(() => {
+    if (selectedTeam === "All") return null;
+
+    return teams.find((team) => team.name === selectedTeam) ?? null;
+  }, [selectedTeam]);
+
+  const Icon = selectedTeamInfo
+    ? teamIcons[selectedTeamInfo.icon]
+    : null;
 
   const filteredMembers = useMemo(() => {
     return batchMembers.filter((member) => {
@@ -231,6 +262,7 @@ function Team() {
             </select>
           </div>
 
+
           {/* Team */}
           <div className="team-filter-group">
             <label htmlFor="team-name">
@@ -248,18 +280,32 @@ function Team() {
                 All Teams
               </option>
 
-              {teams.map((team) => (
-                <option
-                  key={team}
-                  value={team}
-                >
-                  {team}
+              {availableTeams.map((team) => (
+                <option key={team.id} value={team.name}>
+                  {team.name}
                 </option>
               ))}
             </select>
           </div>
 
         </div>
+
+        {/* Selected team information */}
+        {selectedTeamInfo && (
+          <div className="team-description">
+            <div className="team-description-content">
+              <div className="team-description-heading">
+                <div className="team-description-icon">
+                  {Icon && <Icon size={19} strokeWidth={1.8} />}
+                </div>
+
+                <h3>{selectedTeamInfo.name}</h3>
+              </div>
+
+              <p>{selectedTeamInfo.description}</p>
+            </div>
+          </div>
+        )}
 
         {/* Result count */}
         <div className="team-results">

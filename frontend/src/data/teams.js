@@ -2,36 +2,36 @@ export const teams = [
   {
     id: "designing-team",
     name: "Designing Team",
-    icon: "pen",
+    icon: "Pen",
     description:
-      "Handles visual design, creatives and branding for club communications.",
+      "Designs visual content, graphics and promotional materials for the club's events and social media presence."
   },
   {
     id: "drafting-team",
     name: "Drafting Team",
-    icon: "layers",
+    icon: "FileText",
     description:
-      "Prepares written content, reports and documentation for club activities.",
+      "Prepares official documentation, reports and communication materials for the club's activities and initiatives."
   },
   {
     id: "excel-team",
     name: "Excel Team",
-    icon: "grid",
+    icon: "Table2",
     description:
-      "Manages data, records and spreadsheet-based tracking for the club.",
+      "Maintains data records, spreadsheets and reports supporting the club's activities and operations."
   },
   {
     id: "scrutiny-team",
     name: "Scrutiny Team",
-    icon: "check",
+    icon: "CircleCheck",
     description:
-      "Reviews and verifies information, submissions and coordination details.",
+      "Reviews information, documentation and submissions to ensure accuracy and compliance with club requirements."
   },
   {
     id: "gateway-outreach-team",
     name: "Gateway & Outreach Team",
-    icon: "handshake",
+    icon: "Handshake",
     description:
-      "Manages outreach, coordination and communication with external contacts.",
+      "Manages external outreach, communication and professional engagements for the club."
   },
 ];
