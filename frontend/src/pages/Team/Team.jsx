@@ -201,9 +201,8 @@ function Team() {
           </h2>
 
           <p className="section-sub">
-            Students working together across design, coordination,
-            outreach and operations to keep the Training &amp; Placement
-            Club moving forward.
+            The students who, through their initiatives, skills and dedication,
+            play an active role in shaping the club and making it what it is today.
           </p>
         </div>
 

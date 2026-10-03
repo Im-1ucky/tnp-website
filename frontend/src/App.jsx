@@ -1,6 +1,7 @@
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 import Team from "./pages/Team/Team";
+import Events from "./pages/Events/Events"
 
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <Home />
       <About />
       <Team />
+      <Events />
     </>
   );
 }

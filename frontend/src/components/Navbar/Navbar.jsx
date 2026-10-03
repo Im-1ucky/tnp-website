@@ -100,31 +100,43 @@ function Navbar() {
 
     if (sections.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleSections = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) =>
-              b.intersectionRatio - a.intersectionRatio
-          );
+    function updateActiveSection() {
+      const navbarHeight = 80;
 
-        if (visibleSections.length > 0) {
-          setActiveSection(visibleSections[0].target.id);
+      let activeId = sections[0].id;
+      let closestDistance = Infinity;
+
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+
+        /*
+         * Only consider sections that have reached
+         * the navbar area or are currently below it.
+         */
+        if (rect.top <= navbarHeight + 100) {
+          const distance = Math.abs(rect.top - navbarHeight);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            activeId = section.id;
+          }
         }
-      },
-      {
-        rootMargin: "-20% 0px -65% 0px",
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
-      }
-    );
+      });
 
-    sections.forEach((section) => {
-      observer.observe(section);
+      setActiveSection(activeId);
+    }
+
+    updateActiveSection();
+
+    window.addEventListener("scroll", updateActiveSection, {
+      passive: true,
     });
 
+    window.addEventListener("resize", updateActiveSection);
+
     return () => {
-      observer.disconnect();
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
     };
   }, []);
 
