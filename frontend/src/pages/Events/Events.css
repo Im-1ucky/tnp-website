@@ -5,7 +5,9 @@
 
 .events {
   overflow: hidden;
+  margin-top: -10px;
 }
+
 
 .events-head {
   margin-bottom: 22px;
@@ -50,7 +52,7 @@
 .events-list {
   display: flex;
   flex-direction: column;
-  gap: 42px;
+  gap: 12px;
 }
 
 .event {
@@ -274,28 +276,23 @@
    INSTAGRAM BAR
    ========================= */
 
-.instagram-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+   .instagram-bar {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 24px;
 
-  width: 100%;
-  margin-bottom: 38px;
-  padding: 18px 20px;
+     width: 100%;
+     margin-bottom: 38px;
+     padding: 18px 20px;
 
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+     border: 1px solid var(--color-border);
+     border-radius: var(--radius-md);
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(20, 110, 255, 0.08),
-      rgba(10, 17, 28, 0.96)
-    );
+     background: var(--color-surface);
 
-  box-shadow: var(--shadow-sm);
-}
+     box-shadow: var(--shadow-sm);
+   }
 
 .instagram-profile {
   display: flex;
@@ -319,7 +316,7 @@
   border-radius: 50%;
 
   background:
-    linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
     linear-gradient(
       135deg,
       #feda75,
@@ -328,7 +325,7 @@
       #4f5bd5
     ) border-box;
 
-  color: #fff;
+  color: var(--color-text);
 
   font-family: var(--font-display);
   font-size: 20px;

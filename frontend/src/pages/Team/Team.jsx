@@ -110,9 +110,9 @@ function Team() {
   // Embla handles the infinite loop.
   const [emblaRef] = useEmblaCarousel(
     {
-      loop: true,
+      loop: false,
       align: "start",
-      containScroll: false,
+      containScroll: "trimSnaps",
       dragFree: true,
     },
     [
