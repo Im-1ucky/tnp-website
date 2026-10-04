@@ -466,10 +466,11 @@
 @media (max-width: 700px) {
   .events {
     padding-top: 0px !important;
+    padding-bottom: 20px !important;
   }
 
   .events-list {
-    gap: 32px;
+    gap: 10px;
   }
 
   .event-title {

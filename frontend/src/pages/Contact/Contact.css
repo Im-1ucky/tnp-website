@@ -547,6 +547,7 @@
   .contact-form {
     padding: 24px 18px;
     border-radius: var(--radius-md);
+    margin-top: 12px;
   }
 
   .contact-form-head {
@@ -587,7 +588,7 @@
      ========================= */
 
   .contact-footer {
-    margin-top: 42px;
+    margin-top: 0px;
   }
 
   .contact-footer-inner {
