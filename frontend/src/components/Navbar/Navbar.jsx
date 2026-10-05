@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Navbar.css";
 
 const navLinks = [
@@ -50,11 +50,44 @@ function MoonIcon() {
   );
 }
 
-function Navbar() {
+function Navbar({ onEasterEgg }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState("dark");
   const [activeSection, setActiveSection] = useState("home");
+
+  /* ---------- Easter egg ---------- */
+
+  const easterEggClicks = useRef(0);
+  const easterEggTimer = useRef(null);
+
+  const handleEasterEggClick = () => {
+    easterEggClicks.current += 1;
+
+    if (easterEggClicks.current === 1) {
+      easterEggTimer.current = setTimeout(() => {
+        easterEggClicks.current = 0;
+        easterEggTimer.current = null;
+      }, 3500);
+    }
+
+    if (easterEggClicks.current >= 7) {
+      clearTimeout(easterEggTimer.current);
+
+      easterEggClicks.current = 0;
+      easterEggTimer.current = null;
+
+      onEasterEgg();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (easterEggTimer.current) {
+        clearTimeout(easterEggTimer.current);
+      }
+    };
+  }, []);
 
   /* ---------- Load saved theme ---------- */
 
@@ -172,7 +205,10 @@ function Navbar() {
           <a
             href="#home"
             className="brand"
-            onClick={closeMenu}
+            onClick={() => {
+              closeMenu();
+              handleEasterEggClick();
+            }}
           >
             <div className="brand-mark">T&amp;P</div>
 
@@ -206,7 +242,10 @@ function Navbar() {
             <button
               type="button"
               className={`theme-toggle ${menuOpen ? "menu-open" : ""}`}
-              onClick={toggleTheme}
+              onClick={() => {
+                handleEasterEggClick();
+                toggleTheme();
+              }}
               aria-label={`Switch to ${
                 theme === "dark" ? "light" : "dark"
               } mode`}

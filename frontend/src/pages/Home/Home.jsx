@@ -16,10 +16,10 @@ function ArrowIcon() {
   );
 }
 
-function Home() {
+function Home({ onEasterEgg }) {
   return (
     <>
-      <Navbar />
+      <Navbar onEasterEgg={onEasterEgg} />
 
       <main>
         <section className="hero" id="home">

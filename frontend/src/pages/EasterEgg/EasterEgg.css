@@ -1,0 +1,526 @@
+/* ================================
+   HALL OF MAINTAINERS
+================================ */
+
+.easter-egg {
+  min-height: 100vh;
+  padding: 50px 40px 100px;
+
+  background: var(--background);
+  color: var(--text-color);
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.easter-egg-header {
+  max-width: 900px;
+  margin: 0 auto 90px;
+
+  text-align: center;
+}
+
+.easter-egg-header h1 {
+  margin: 0;
+
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 700;
+
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.easter-egg-header p {
+  margin-top: 22px;
+
+  color: var(--text-muted);
+
+  font-size: 1rem;
+}
+
+
+/* ================================
+   BACK BUTTON
+================================ */
+
+.easter-egg-back {
+  margin-bottom: 45px;
+
+  border: none;
+  background: none;
+
+  color: var(--text-muted);
+  font: inherit;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.easter-egg-back:hover {
+  color: var(--text-color);
+}
+
+
+/* ================================
+   TIMELINE
+================================ */
+
+.maintainers-timeline {
+  position: relative;
+
+  max-width: 1100px;
+  margin: 0 auto;
+
+  padding: 20px 0;
+}
+
+
+/* Main vertical line */
+
+.maintainers-timeline::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 50%;
+
+  width: 2px;
+
+  background: var(--text-muted);
+  opacity: 0.35;
+
+  transform: translateX(-50%);
+
+  z-index: 0;
+}
+
+
+/* ================================
+   ENTRY
+================================ */
+
+.timeline-entry {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns: 1fr 80px 1fr;
+
+  align-items: center;
+
+  min-height: 430px;
+}
+
+
+/* ================================
+   CENTER NODE
+================================ */
+
+.timeline-center {
+  grid-column: 2;
+  grid-row: 1;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
+  z-index: 5;
+}
+
+.timeline-node {
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  background: var(--text-color);
+
+  box-shadow:
+    0 0 0 5px var(--background),
+    0 0 0 6px var(--text-muted);
+
+  z-index: 5;
+}
+
+
+/* ================================
+   YEAR
+================================ */
+
+.timeline-year {
+  grid-row: 1;
+
+  font-size: clamp(2.5rem, 4vw, 4rem);
+
+  font-weight: 700;
+
+  letter-spacing: -0.06em;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+
+/* ================================
+   LEFT ENTRY
+
+   CARD ─────── ● ─── YEAR
+================================ */
+
+.timeline-left .timeline-card {
+  grid-column: 1;
+  grid-row: 1;
+
+  justify-self: end;
+}
+
+.timeline-left .timeline-year {
+  grid-column: 3;
+  grid-row: 1;
+
+  padding-left: 35px;
+}
+
+
+/* Connector from left card to timeline */
+
+.timeline-left::after {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+
+  right: 50%;
+
+  width: 40px;
+  height: 1px;
+
+  background: var(--border-color);
+}
+
+
+/* ================================
+   RIGHT ENTRY
+
+   YEAR ─── ● ─────── CARD
+================================ */
+
+.timeline-right .timeline-card {
+  grid-column: 3;
+  grid-row: 1;
+
+  justify-self: start;
+}
+
+.timeline-right .timeline-year {
+  grid-column: 1;
+  grid-row: 1;
+
+  padding-right: 35px;
+
+  text-align: right;
+}
+
+
+/* Connector from timeline to right card */
+
+.timeline-right::after {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+
+  left: 50%;
+
+  width: 40px;
+  height: 1px;
+
+  background: var(--border-color);
+}
+
+
+/* ================================
+   CARD
+================================ */
+
+.maintainer-card {
+  width: 280px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+
+  background: var(--card-background);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  position: relative;
+  z-index: 2;
+}
+
+.maintainer-card:hover {
+  transform: translateY(-6px);
+
+  border-color: var(--text-color);
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+
+/* ================================
+   IMAGE
+================================ */
+
+.maintainer-image {
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
+
+  background: var(--surface-color);
+}
+
+.maintainer-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.4s ease;
+}
+
+.maintainer-card:hover .maintainer-image img {
+  transform: scale(1.04);
+}
+
+
+/* ================================
+   INFO
+================================ */
+
+.maintainer-info {
+  padding: 18px 20px 20px;
+}
+
+.maintainer-info h2 {
+  margin: 0;
+
+  font-size: 1.05rem;
+  font-weight: 600;
+
+  letter-spacing: -0.02em;
+}
+
+.maintainer-info p {
+  margin: 6px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 0.82rem;
+
+  line-height: 1.5;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 768px) {
+
+  .easter-egg {
+    padding: 35px 20px 80px;
+  }
+
+  .easter-egg-header {
+    margin-bottom: 65px;
+  }
+
+  .easter-egg-header h1 {
+    font-size: clamp(2.8rem, 12vw, 4rem);
+  }
+
+
+  /* Timeline moves to left */
+
+  .maintainers-timeline {
+    padding-left: 35px;
+  }
+
+  .maintainers-timeline::before {
+    left: 8px;
+
+    transform: none;
+  }
+
+
+  /* Entry */
+
+  .timeline-entry {
+    display: grid;
+
+    grid-template-columns: 35px 1fr;
+
+    align-items: start;
+
+    min-height: auto;
+
+    margin-bottom: 65px;
+  }
+
+
+  /* Node */
+
+  .timeline-center {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+
+    justify-content: flex-start;
+
+    align-items: flex-start;
+
+    padding-top: 10px;
+  }
+
+
+  /* Year */
+
+  .timeline-year,
+  .timeline-left .timeline-year,
+  .timeline-right .timeline-year {
+    grid-column: 2;
+    grid-row: 1;
+
+    padding: 0;
+
+    margin-bottom: 18px;
+
+    text-align: left;
+
+    font-size: 2.5rem;
+  }
+
+
+  /* Card */
+
+  .timeline-card,
+  .timeline-left .timeline-card,
+  .timeline-right .timeline-card {
+    grid-column: 2;
+    grid-row: 2;
+
+    justify-self: start;
+
+    width: 100%;
+  }
+
+
+  .maintainer-card {
+    width: min(100%, 300px);
+  }
+
+
+  /* Remove horizontal connectors */
+
+  .timeline-left::after,
+  .timeline-right::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+
+    width: 40px;
+    height: 2px;
+
+    background: var(--text-muted);
+
+    opacity: 0.35;
+
+    z-index: 1;
+  }
+
+  .timeline-left::after {
+    right: 50%;
+  }
+
+  .timeline-right::after {
+    left: 50%;
+  }
+}
+
+
+/* ================================
+   SMALL MOBILE
+================================ */
+
+@media (max-width: 450px) {
+
+  .easter-egg {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .maintainers-timeline {
+    padding-left: 30px;
+  }
+
+  .maintainers-timeline::before {
+    left: 7px;
+  }
+
+  .timeline-entry {
+    grid-template-columns: 30px 1fr;
+  }
+
+  .timeline-year,
+  .timeline-left .timeline-year,
+  .timeline-right .timeline-year {
+    font-size: 2.2rem;
+  }
+
+  .maintainer-card {
+    width: 100%;
+  }
+}
+
+
+/* ================================
+   REDUCED MOTION
+================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .maintainer-card,
+  .maintainer-image img,
+  .easter-egg-back {
+    transition: none;
+  }
+
+  .maintainer-card:hover {
+    transform: none;
+  }
+
+  .maintainer-card:hover .maintainer-image img {
+    transform: none;
+  }
+}

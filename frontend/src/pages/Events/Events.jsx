@@ -5,6 +5,12 @@ import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { events } from "../../data/events";
 import "./Events.css";
 
+const FALLBACK_INSTAGRAM_STATS = {
+  views: 33105,
+  likes: 11651,
+  followers: 963,
+};
+
 function EventGallery({ event, onImageClick }) {
   const [emblaRef] = useEmblaCarousel(
     {
@@ -157,6 +163,32 @@ function ImageLightbox({ images, startIndex, onClose }) {
 
 function Events() {
   const [lightbox, setLightbox] = useState(null);
+  const [instagram, setInstagram] = useState(
+    FALLBACK_INSTAGRAM_STATS
+  );
+
+  //Fetches instagram statistics
+  useEffect(() => {
+    async function fetchInstagramStats() {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/instagram/stats"
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch Instagram stats");
+        }
+
+        const data = await response.json();
+
+        setInstagram(data);
+      } catch (error) {
+        console.error("Instagram stats error:", error);
+      }
+    }
+
+    fetchInstagramStats();
+  }, []);
 
   function openLightbox(images, index) {
     setLightbox({
@@ -219,8 +251,9 @@ function Events() {
               </div>
 
               <div className="instagram-stats">
-                <span>114K+ Views</span>
-                <span>16K+ Likes</span>
+                <span>{instagram.views.toLocaleString()} Views</span>
+                <span>{instagram.likes.toLocaleString()} Likes</span>
+                <span>{instagram.followers.toLocaleString()} Followers</span>
               </div>
             </div>
           </div>
