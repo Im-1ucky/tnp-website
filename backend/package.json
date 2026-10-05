@@ -1,0 +1,10 @@
+{
+  "name": "backend",
+  "module": "index.js",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "dotenv": "^...",
+    "express": "^5.2.1"
+  }
+}
