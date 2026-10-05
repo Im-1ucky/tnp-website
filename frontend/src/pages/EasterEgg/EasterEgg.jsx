@@ -1,7 +1,13 @@
+import { useState } from "react";
 import "./EasterEgg.css";
+
 import { maintainerBatches } from "../../data/members/easteregg";
+import { TeamMemberCard } from "../Team/Team";
+import TeamCard from "../Team/TeamCard/TeamCard";
 
 function EasterEgg({ onBack }) {
+  const [selectedMember, setSelectedMember] = useState(null);
+
   const maintainers = maintainerBatches.flatMap((batch) =>
     batch.members.map((member) => ({
       ...member,
@@ -38,34 +44,35 @@ function EasterEgg({ onBack }) {
               }`}
               key={member.id}
             >
+              {/* Team member card */}
               <div className="timeline-card">
-                <div className="maintainer-card">
-                  <div className="maintainer-image">
-                    <img
-                      src={`/assets/Batches/${member.batchYear}/${member.rollNo}.png`}
-                      alt={member.name}
-                    />
-                  </div>
-
-                  <div className="maintainer-info">
-                    <h2>{member.name}</h2>
-                    <p>{member.team}</p>
-                    <p>{member.department}</p>
-                  </div>
-                </div>
+                <TeamMemberCard
+                  member={member}
+                  onClick={() => setSelectedMember(member)}
+                />
               </div>
 
+              {/* Timeline */}
               <div className="timeline-center">
                 <span className="timeline-node" />
               </div>
 
+              {/* Batch */}
               <div className="timeline-year">
-                {member.batchYear}
+                Batch&nbsp;{member.batchYear}
               </div>
             </article>
           );
         })}
       </section>
+
+      {/* Existing Team profile popup */}
+      {selectedMember && (
+        <TeamCard
+          member={selectedMember}
+          onClose={() => setSelectedMember(null)}
+        />
+      )}
     </main>
   );
 }

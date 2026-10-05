@@ -66,7 +66,7 @@ function MemberPhoto({ member }) {
   );
 }
 
-function TeamMemberCard({ member, onClick }) {
+export function TeamMemberCard({ member, onClick }) {
   return (
     <article
       className="team-member-card"
