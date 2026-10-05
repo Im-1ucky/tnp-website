@@ -8,7 +8,7 @@ import Contact from "./pages/Contact/Contact";
 import EasterEgg from "./pages/EasterEgg/EasterEgg";
 
 function App() {
-  const [showEasterEgg, setShowEasterEgg] = useState(true);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   if (showEasterEgg) {
     return (

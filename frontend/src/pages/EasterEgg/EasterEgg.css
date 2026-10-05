@@ -196,13 +196,7 @@
   width: 14px;
   height: 14px;
 
-  border-radius: 50%;
-
-  background: var(--text-color);
-
-  box-shadow:
-    0 0 0 5px var(--background),
-    0 0 0 6px var(--text-muted);
+  flex-shrink: 0;
 }
 
 
@@ -333,10 +327,10 @@
   padding: 14px 16px;
 }
 
-
 /* ================================
    MOBILE
 ================================ */
+
 
 @media (max-width: 768px) {
 
@@ -353,7 +347,9 @@
   }
 
 
-  /* Timeline moves to the left */
+  /* ================================
+     MOBILE TIMELINE
+  ================================ */
 
   .maintainers-timeline {
     padding-left: 35px;
@@ -361,7 +357,6 @@
 
   .maintainers-timeline::before {
     left: 8px;
-
     transform: none;
   }
 
@@ -387,10 +382,16 @@
     grid-column: 1;
     grid-row: 1 / span 2;
 
-    justify-content: flex-start;
+    display: flex;
+
     align-items: flex-start;
+    justify-content: flex-start;
+
+    height: 100%;
 
     padding-top: 10px;
+
+    z-index: 5;
   }
 
 
@@ -402,7 +403,7 @@
     grid-column: 2;
     grid-row: 1;
 
-    padding: 0;
+    padding: 0 0 0 50px;
 
     margin-bottom: 18px;
 
@@ -430,11 +431,27 @@
   }
 
 
-  /* Remove desktop connectors */
+  /* Connector */
 
   .timeline-left::after,
   .timeline-right::after {
-    display: none;
+    content: "";
+
+    position: absolute;
+
+    top: 17px;
+    left: 8px;
+    right: auto;
+
+    width: 35px;
+    height: 1px;
+
+    margin: 0;
+    padding: 0;
+
+    background: var(--color-primary);
+
+    z-index: 1;
   }
 }
 
