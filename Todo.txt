@@ -1,32 +1,6 @@
-3. Faculty
 4. Alumni
 5. News page with pinned news and editing access
 6. Login and user access
 7. Send Notifications
 8. Admin page with analytics
 9. Configure Insta Api to work once a day at midnight
-
-
-
-Yes, something in the same tone would work well. I'd use:
-
-    Our faculty, our guides and mentors, whose experience, support and guidance help shape the club and its members.
-
-Or a slightly more polished version:
-
-    Our faculty, our guides and mentors, whose experience, encouragement and guidance help us grow and shape the club.
-
-I prefer the second one because it feels natural alongside your student description.
-
-So the two sections would read:
-Faculty
-
-Our Faculty
-
-    Our faculty, our guides and mentors, whose experience, encouragement and guidance help us grow and shape the club.
-
-Students
-
-Meet the people behind the club
-
-    The students who, through their initiatives, skills and dedication, play an active role in shaping the club and making it what it is today.

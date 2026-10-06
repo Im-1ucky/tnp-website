@@ -3,7 +3,7 @@
 }
 
 .team-head {
-  margin-bottom: 22px;
+  margin-bottom: 10px;
 }
 
 /* =========================
@@ -255,6 +255,33 @@
   display: flex;
 }
 
+/* ================================
+   FACULTY SECTION
+================================ */
+
+.faculty-section {
+  margin-bottom: 30px;
+}
+
+.faculty-sub {
+  margin-top: 0;
+  margin-bottom: 28px !important;
+}
+
+.faculty-filters {
+  margin-bottom: 28px;
+}
+
+.faculty-carousel {
+  margin-bottom: 0;
+}
+
+/* Student description after faculty */
+.student-sub {
+  margin-top: 0;
+  margin-bottom: 28px !important;
+}
+
 
 /* =========================
    MEMBER CARD
@@ -457,7 +484,7 @@
     }
 
   .team-head {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
   }
 
   .team-batches {
