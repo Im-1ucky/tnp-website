@@ -252,10 +252,10 @@
   gap: 5px;
   padding: 0;
 
-  border: 1px solid #1d3048;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 10px;
 
-  background: rgba(10, 17, 28, 0.72);
+  background: rgba(255, 255, 255, 0.03);
   color: #ffffff;
 
   backdrop-filter: blur(10px);
@@ -446,4 +446,20 @@
 
     margin-left: 0;
   }
+
+  .navbar.menu-open {
+    z-index: 210;
+
+    background: rgba(5, 8, 13, 0.96);
+
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-primary) 35%, transparent);
+
+    box-shadow: var(--shadow-md);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+
 }

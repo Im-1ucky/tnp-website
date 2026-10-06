@@ -197,7 +197,9 @@ function Navbar({ onEasterEgg }) {
   return (
     <>
       <nav
-        className={`navbar ${scrolled ? "scrolled" : ""}`}
+          className={`navbar ${
+            scrolled ? "scrolled" : ""
+          } ${menuOpen ? "menu-open" : ""}`}
         aria-label="Main navigation"
       >
         <div className="nav-inner">
