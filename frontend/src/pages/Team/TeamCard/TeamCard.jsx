@@ -11,11 +11,21 @@ function getInitials(name) {
     .toUpperCase();
 }
 
-function TeamCard({ member, onClose }) {
+function TeamCard({ member, onClose, type = "student" }) {
   const [extension, setExtension] = useState("jpg");
   const [failed, setFailed] = useState(false);
 
+  const isFaculty = type === "faculty";
+
+  /* ==============================
+     MODAL BEHAVIOUR
+  ================================ */
+
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
     function handleKeyDown(event) {
       if (event.key === "Escape") {
         onClose();
@@ -25,9 +35,14 @@ function TeamCard({ member, onClose }) {
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [onClose]);
+
+  /* ==============================
+     PHOTO
+  ================================ */
 
   function handlePhotoError() {
     if (extension === "jpg") {
@@ -43,7 +58,9 @@ function TeamCard({ member, onClose }) {
     }
   }
 
-  const photoPath = `/assets/Batches/${member.graduationYear}/${member.rollNo}.${extension}`;
+  const photoPath = isFaculty
+    ? `/assets/Faculty/${member.name.replace(/\s+/g, "")}.${extension}`
+    : `/assets/Batches/${member.graduationYear}/${member.rollNo}.${extension}`;
 
   return (
     <div
@@ -91,7 +108,7 @@ function TeamCard({ member, onClose }) {
         {/* BODY */}
         <div className="team-card-body">
 
-          {/* NAME + BATCH */}
+          {/* NAME + TYPE/BATCH */}
           <div className="team-card-heading">
             <div>
               <h2 id="team-card-name">
@@ -104,52 +121,58 @@ function TeamCard({ member, onClose }) {
             </div>
 
             <span className="team-card-batch">
-              Batch {member.graduationYear}
+              {isFaculty
+                ? "Faculty"
+                : `Batch ${member.graduationYear}`}
             </span>
           </div>
 
           {/* DETAILS */}
           <div className="team-card-grid">
 
-            <div className="team-card-field">
-              <span className="team-card-label">
-                Roll Number
-              </span>
+            {isFaculty ? (
+              <div className="team-card-field">
+                <span className="team-card-label">
+                  Department
+                </span>
 
-              <strong className="team-card-roll">
-                {member.rollNo}
-              </strong>
-            </div>
+                <strong>
+                  {member.department}
+                </strong>
+              </div>
+            ) : (
+              <>
+                <div className="team-card-field">
+                  <span className="team-card-label">
+                    Roll Number
+                  </span>
 
-            <div className="team-card-field">
-              <span className="team-card-label">
-                Department
-              </span>
+                  <strong className="team-card-roll">
+                    {member.rollNo}
+                  </strong>
+                </div>
 
-              <strong>
-                {member.department}
-              </strong>
-            </div>
+                <div className="team-card-field">
+                  <span className="team-card-label">
+                    Department
+                  </span>
 
-            <div className="team-card-field">
-              <span className="team-card-label">
-                Official Team
-              </span>
+                  <strong>
+                    {member.department}
+                  </strong>
+                </div>
 
-              <strong>
-                {member.team}
-              </strong>
-            </div>
+                <div className="team-card-field">
+                  <span className="team-card-label">
+                    Official Team
+                  </span>
 
-            <div className="team-card-field">
-              <span className="team-card-label">
-                Batch
-              </span>
-
-              <strong>
-                {member.graduationYear}
-              </strong>
-            </div>
+                  <strong>
+                    {member.team}
+                  </strong>
+                </div>
+              </>
+            )}
 
           </div>
         </div>

@@ -152,9 +152,12 @@ function FacultyPhoto({ member }) {
    FACULTY CARD
 ================================ */
 
-function FacultyCard({ member }) {
+function FacultyCard({ member, onClick }) {
   return (
-    <article className="team-member-card">
+    <article
+      className="team-member-card"
+      onClick={onClick}
+    >
       <FacultyPhoto member={member} />
 
       <div className="team-member-content">
@@ -181,6 +184,7 @@ function Team() {
   const [selectedDepartment, setSelectedDepartment] = useState("All");
   const [selectedTeam, setSelectedTeam] = useState("All");
   const [selectedMember, setSelectedMember] = useState(null);
+  const [selectedFaculty, setSelectedFaculty] = useState(null);
 
   const [
     selectedFacultyDepartment,
@@ -435,6 +439,7 @@ function Team() {
                     <FacultyCard
                       key={member.id}
                       member={member}
+                      onClick={() => setSelectedFaculty(member)}
                     />
                   )
                 )}
@@ -674,6 +679,15 @@ function Team() {
             onClose={() =>
               setSelectedMember(null)
             }
+          />
+        )}
+
+        {/* FACULTY MODAL */}
+        {selectedFaculty && (
+          <TeamCard
+            member={selectedFaculty}
+            type="faculty"
+            onClose={() => setSelectedFaculty(null)}
           />
         )}
 
