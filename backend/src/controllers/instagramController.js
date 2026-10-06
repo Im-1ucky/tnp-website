@@ -5,9 +5,11 @@ import {
   getInstagramStats,
 } from "../services/instagramService.js";
 
+import { INSTAGRAM_ACCESS_TOKEN } from "../config/env.js";
+
 export async function getInstagramStatsController(req, res) {
   try {
-    const stats = await getInstagramStats();
+    const stats = await getInstagramStats(INSTAGRAM_ACCESS_TOKEN);
 
     res.json(stats);
   } catch (error) {
@@ -21,7 +23,7 @@ export async function getInstagramStatsController(req, res) {
 
 export async function getInstagramProfile(req, res) {
   try {
-    const profile = await getProfile();
+    const profile = await getProfile(INSTAGRAM_ACCESS_TOKEN);
 
     res.json(profile);
   } catch (error) {
@@ -35,7 +37,7 @@ export async function getInstagramProfile(req, res) {
 
 export async function getInstagramMedia(req, res) {
   try {
-    const media = await getAllMedia();
+    const media = await getAllMedia(INSTAGRAM_ACCESS_TOKEN);
 
     res.json({
       count: media.length,
@@ -52,9 +54,12 @@ export async function getInstagramMedia(req, res) {
 
 export async function getInstagramViews(req, res) {
   try {
-    const media = await getAllMedia();
+    const media = await getAllMedia(INSTAGRAM_ACCESS_TOKEN);
 
-    const result = await getMediaViews(media);
+    const result = await getMediaViews(
+      media,
+      INSTAGRAM_ACCESS_TOKEN
+    );
 
     res.json({
       mediaCount: media.length,
@@ -71,7 +76,7 @@ export async function getInstagramViews(req, res) {
 
 export async function getInstagramLikes(req, res) {
   try {
-    const media = await getAllMedia();
+    const media = await getAllMedia(INSTAGRAM_ACCESS_TOKEN);
 
     const totalLikes = media.reduce(
       (total, item) => total + (item.like_count ?? 0),

@@ -1,0 +1,17 @@
+{
+	"$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
+	"name": "tnp-api",
+	"main": "src/workers/worker.js",
+	"compatibility_date": "2026-10-06",
+	"triggers": {
+		"crons": [
+			"0 * * * *"
+		]
+	},
+	"kv_namespaces": [
+		{
+			"binding": "INSTAGRAM_STATS",
+			"id": "6cdea9cc9a4c496fb683e571310e7d21"
+		}
+	]
+}

@@ -1,14 +1,11 @@
-import { INSTAGRAM_ACCESS_TOKEN } from "../config/env.js";
-
 const GRAPH_URL = "https://graph.instagram.com";
 
-async function instagramRequest(endpoint) {
+async function instagramRequest(endpoint, accessToken) {
   const url = new URL(`${GRAPH_URL}${endpoint}`);
 
-  url.searchParams.set("access_token", INSTAGRAM_ACCESS_TOKEN);
+  url.searchParams.set("access_token", accessToken);
 
   const response = await fetch(url);
-
   const data = await response.json();
 
   if (!response.ok) {
@@ -20,13 +17,14 @@ async function instagramRequest(endpoint) {
   return data;
 }
 
-export async function getProfile() {
+export async function getProfile(accessToken) {
   return instagramRequest(
-    "/me?fields=id,username,account_type,media_count,followers_count"
+    "/me?fields=id,username,account_type,media_count,followers_count",
+    accessToken
   );
 }
 
-export async function getAllMedia() {
+export async function getAllMedia(accessToken) {
   const fields = [
     "id",
     "media_type",
@@ -41,7 +39,7 @@ export async function getAllMedia() {
 
   url.searchParams.set("fields", fields);
   url.searchParams.set("limit", "100");
-  url.searchParams.set("access_token", INSTAGRAM_ACCESS_TOKEN);
+  url.searchParams.set("access_token", accessToken);
 
   const media = [];
 
@@ -65,20 +63,20 @@ export async function getAllMedia() {
   return media;
 }
 
-export async function getMediaViews(media) {
+export async function getMediaViews(media, accessToken) {
   let totalViews = 0;
   let processed = 0;
   let failed = 0;
 
   for (const item of media) {
-    // Views are relevant to video/reel media.
     if (item.media_type !== "VIDEO") {
       continue;
     }
 
     try {
       const data = await instagramRequest(
-        `/${item.id}/insights?metric=views`
+        `/${item.id}/insights?metric=views`,
+        accessToken
       );
 
       const views = data.data?.find(
@@ -107,9 +105,9 @@ export async function getMediaViews(media) {
   };
 }
 
-export async function getInstagramStats() {
-  const profile = await getProfile();
-  const media = await getAllMedia();
+export async function getInstagramStats(accessToken) {
+  const profile = await getProfile(accessToken);
+  const media = await getAllMedia(accessToken);
 
   const totalLikes = media.reduce(
     (total, item) => total + (item.like_count ?? 0),
@@ -121,7 +119,7 @@ export async function getInstagramStats() {
   );
 
   const { totalViews, processed, failed } =
-    await getMediaViews(videoMedia);
+    await getMediaViews(videoMedia, accessToken);
 
   return {
     followers: profile.followers_count,

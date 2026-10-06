@@ -1,6 +1,5 @@
 4. Alumni
 5. News page with pinned news and editing access
 6. Login and user access
-7. Send Notifications
 8. Admin page with analytics
-9. Configure Insta Api to work once a day at midnight
+9. Configure Insta Api to work once every hour
