@@ -46,7 +46,7 @@
 }
 
 .alumni .section-title {
-  margin: 0 0 15px;
+  margin: 0 0 18px;
 
   color: var(--color-text);
   font-family: var(--font-display);
@@ -58,7 +58,7 @@
 
 .alumni .section-sub {
   max-width: 640px;
-  margin: 0 0 15px;
+  margin: 0 0 19px;
 
   color: var(--color-text-muted);
   font-family: var(--font-body);
@@ -75,7 +75,7 @@
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
 
-  padding: 10px 4px 20px;
+  padding: 0px 4px 20px;
 
   scrollbar-width: none;
 }
@@ -475,7 +475,7 @@
 
 @media (max-width: 650px) {
   .alumni {
-    padding: 60px 0;
+    padding: 10px 0;
   }
 
   .alumni-container {

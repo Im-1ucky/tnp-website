@@ -4,16 +4,6 @@ import "./Alumni.css";
 
 const SHOW_ALUMNI = true;
 
-function getInitials(name) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-}
-
 function AlumniCard({ member, onClose }) {
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -139,7 +129,7 @@ function Alumni() {
 
           <div className="alumni-main">
             <h2 className="section-title">
-              Campus to Career
+              Beyond the Campus
             </h2>
 
             <p className="section-sub">

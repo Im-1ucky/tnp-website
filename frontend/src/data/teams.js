@@ -1,3 +1,6 @@
+// You can add more teams but I suggest that you don't
+// Unless you know how to code and understsand the architecture
+
 export const teams = [
   {
     id: "designing-team",

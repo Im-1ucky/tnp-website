@@ -154,42 +154,58 @@ function Contact() {
           </div>
 
           <div className="contact-footer-links">
-            <a
-              href="https://www.instagram.com/tnpclub_gprec/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-            >
-              {/* your existing Instagram SVG */}
-              <svg
-                viewBox="0 0 24 24"
-                width="18"
-                height="18"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" />
-              </svg>
-            </a>
 
-            <a
-              href="mailto:tpac@gprec.ac.in"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Email"
-            >
-              <Mail size={18} strokeWidth={1.8} />
-            </a>
+            <div className="contact-footer-social">
+              <a
+                href="https://www.instagram.com/tnpclub_gprec/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+              >
+                {/* Instagram SVG */}
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle
+                    cx="17.5"
+                    cy="6.5"
+                    r="0.8"
+                    fill="currentColor"
+                    stroke="none"
+                  />
+                </svg>
+              </a>
+
+              <a
+                href="mailto:tpac@gprec.ac.in"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Email"
+              >
+                <Mail size={18} strokeWidth={1.8} />
+              </a>
+            </div>
+
           </div>
 
           <div className="contact-footer-bottom">
-            © 2026 Training &amp; Placement Club · GPREC
+            <span>
+              © 2026 Training &amp; Placement Club · GPREC
+            </span>
+
+            <a href="/login" className="login-link">
+              Login
+            </a>
           </div>
 
         </div>

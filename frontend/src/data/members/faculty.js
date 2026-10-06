@@ -1,5 +1,5 @@
 //The photos would be in public/assets/Faculty file
-// Make sure to save the faculty photos as
+// Make sure to save the faculty photos as their name with no spaces
 
 export const SHOW_FACULTY = true;   //Changing this to false will remove the faculty section altogether
 

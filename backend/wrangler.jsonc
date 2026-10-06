@@ -13,5 +13,13 @@
 			"binding": "INSTAGRAM_STATS",
 			"id": "6cdea9cc9a4c496fb683e571310e7d21"
 		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "tnp-db",
+			"database_id": "39ca811e-2d63-45ba-bd7b-14b1ff3bf5d6",
+				"migrations_dir": "src/db/migrations"
+		}
 	]
 }

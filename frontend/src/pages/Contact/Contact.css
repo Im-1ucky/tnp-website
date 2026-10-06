@@ -279,6 +279,16 @@
 
      font-size: 12px;
      font-weight: 400;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+
+   }
+
+   .contact-footer-social {
+     display: flex;
+     align-items: center;
+     gap: 10px;
    }
 
 
@@ -500,6 +510,17 @@
   transform: translateY(0);
 }
 
+.login-link {
+  color: inherit;
+  text-decoration: none;
+  font-size: 0.8rem;
+  opacity: 0.55;
+  transition: opacity 0.2s ease;
+}
+
+.login-link:hover {
+  opacity: 1;
+}
 
 /* =========================
    MOBILE
