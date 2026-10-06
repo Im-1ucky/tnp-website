@@ -1,4 +1,7 @@
-export const SHOW_FACULTY = true;
+//The photos would be in public/assets/Faculty file
+// Make sure to save the faculty photos as
+
+export const SHOW_FACULTY = true;   //Changing this to false will remove the faculty section altogether
 
 export const faculty = [
   {

@@ -7,6 +7,7 @@ const navLinks = [
   { label: "News", href: "#news", id: "news" },
   { label: "Teams", href: "#teams", id: "teams" },
   { label: "Events", href: "#events", id: "events" },
+  { label: "Alumni", href: "#alumni", id: "alumni" },
   { label: "Contact Us", href: "#contact", id: "contact" },
 ];
 
@@ -135,26 +136,25 @@ function Navbar({ onEasterEgg }) {
 
     function updateActiveSection() {
       const navbarHeight = 80;
+      const triggerPoint = navbarHeight + 100;
 
       let activeId = sections[0].id;
-      let closestDistance = Infinity;
 
-      sections.forEach((section) => {
+      for (const section of sections) {
         const rect = section.getBoundingClientRect();
 
         /*
-         * Only consider sections that have reached
-         * the navbar area or are currently below it.
+         * The active section is the section that contains
+         * the point just below the navbar.
          */
-        if (rect.top <= navbarHeight + 100) {
-          const distance = Math.abs(rect.top - navbarHeight);
-
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            activeId = section.id;
-          }
+        if (
+          rect.top <= triggerPoint &&
+          rect.bottom > triggerPoint
+        ) {
+          activeId = section.id;
+          break;
         }
-      });
+      }
 
       setActiveSection(activeId);
     }
@@ -194,6 +194,7 @@ function Navbar({ onEasterEgg }) {
     setMenuOpen(false);
   };
 
+  console.log("ACTIVE SECTION:", activeSection);
   return (
     <>
       <nav

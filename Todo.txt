@@ -2,4 +2,5 @@
 5. News page with pinned news and editing access
 6. Login and user access
 8. Admin page with analytics
-9. Configure Insta Api to work once every hour
+9. Faculty card click function
+10. Turn off scroll when we open Menu button in mobile and team card

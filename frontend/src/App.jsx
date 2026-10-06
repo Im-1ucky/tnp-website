@@ -6,6 +6,7 @@ import Team from "./pages/Team/Team";
 import Events from "./pages/Events/Events";
 import Contact from "./pages/Contact/Contact";
 import EasterEgg from "./pages/EasterEgg/EasterEgg";
+import Alumni from "./pages/Alumni/Alumni";
 
 function App() {
   const [showEasterEgg, setShowEasterEgg] = useState(false);
@@ -24,6 +25,7 @@ function App() {
       <About />
       <Team />
       <Events />
+      <Alumni />
       <Contact />
     </>
   );
