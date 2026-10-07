@@ -1,0 +1,164 @@
+/* =========================
+   NEWS CARD
+   ========================= */
+
+.news-card {
+  flex: 0 0 calc((100% - 72px) / 5);
+  min-width: 0;
+  margin-right: 18px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface);
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.news-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.news-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* =========================
+   IMAGE
+   ========================= */
+
+.news-card-image-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+
+  background: var(--color-bg);
+}
+
+.news-card-image {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.35s var(--ease);
+}
+
+.news-card:hover .news-card-image {
+  transform: scale(1.04);
+}
+
+/* =========================
+   CONTENT
+   ========================= */
+
+.news-card-content {
+  padding: 16px;
+}
+
+.news-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 20px;
+  margin-bottom: 8px;
+}
+
+.news-card-date {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.news-card-pin {
+  font-size: 0.75rem;
+  line-height: 1;
+
+  opacity: 0.75;
+}
+
+.news-card-title {
+  margin: 0;
+
+  color: var(--color-text);
+
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  overflow: hidden;
+}
+
+.news-card-description {
+  margin: 8px 0 0;
+
+  color: var(--color-text-muted);
+
+  font-size: 0.82rem;
+  line-height: 1.5;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+
+  overflow: hidden;
+}
+
+/* =========================
+   PINNED
+   ========================= */
+
+.news-card-pinned {
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 35%,
+    var(--color-border)
+  );
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1100px) {
+  .news-card {
+    flex: 0 0 calc((100% - 54px) / 4);
+  }
+}
+
+@media (max-width: 900px) {
+  .news-card {
+    flex: 0 0 calc((100% - 36px) / 3);
+  }
+}
+
+@media (max-width: 700px) {
+  .news-card {
+    flex: 0 0 calc(100vw - 48px);
+  }
+}
+
+@media (max-width: 480px) {
+  .news-card {
+    flex: 0 0 calc(100vw - 50px);
+  }
+
+  .news-card-content {
+    padding: 14px;
+  }
+}

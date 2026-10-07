@@ -3,8 +3,10 @@ import {
   Send,
 } from "lucide-react";
 import "./Contact.css";
+import { useAuth } from "../../context/AuthContext";
 
 function Contact() {
+  const { user, logout } = useAuth();
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -203,9 +205,19 @@ function Contact() {
               © 2026 Training &amp; Placement Club · GPREC
             </span>
 
-            <a href="/login" className="login-link">
-              Login
-            </a>
+            {user ? (
+              <button
+                type="button"
+                className="login-link"
+                onClick={logout}
+              >
+                Logout
+              </button>
+            ) : (
+              <a href="/login" className="login-link">
+                Login
+              </a>
+            )}
           </div>
 
         </div>

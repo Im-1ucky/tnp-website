@@ -1,33 +1,45 @@
 import { useState } from "react";
 
+import Login from "./pages/Login/Login";
+import { AuthProvider } from "./context/AuthContext";
+
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
+import News from "./pages/News/News";
 import Team from "./pages/Team/Team";
 import Events from "./pages/Events/Events";
+import Alumni from "./pages/Alumni/Alumni";
 import Contact from "./pages/Contact/Contact";
 import EasterEgg from "./pages/EasterEgg/EasterEgg";
-import Alumni from "./pages/Alumni/Alumni";
+
 
 function App() {
   const [showEasterEgg, setShowEasterEgg] = useState(false);
 
-  if (showEasterEgg) {
+  if (window.location.pathname === "/login") {
     return (
-      <EasterEgg
-        onBack={() => setShowEasterEgg(false)}
-      />
+      <AuthProvider>
+        <Login />
+      </AuthProvider>
     );
   }
 
   return (
-    <>
-      <Home onEasterEgg={() => setShowEasterEgg(true)} />
-      <About />
-      <Team />
-      <Events />
-      <Alumni />
-      <Contact />
-    </>
+    <AuthProvider>
+      {showEasterEgg ? (
+        <EasterEgg onBack={() => setShowEasterEgg(false)} />
+      ) : (
+        <>
+          <Home onEasterEgg={() => setShowEasterEgg(true)} />
+          <About />
+          <News />
+          <Team />
+          <Events />
+          <Alumni />
+          <Contact />
+        </>
+      )}
+    </AuthProvider>
   );
 }
 

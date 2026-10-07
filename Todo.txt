@@ -1,3 +1,4 @@
 5. News page with pinned news and editing access
 6. Login and user access
 8. Admin page with analytics
+9. Send Notifications whenever news is added(no delete no edit only added) using webpush
