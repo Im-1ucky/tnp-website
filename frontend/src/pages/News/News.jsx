@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
 import { useAuth } from "../../context/AuthContext";
+import { Plus } from "lucide-react";
 
 import NewsCard from "./NewsCard/NewsCard";
 import NewsModal from "./NewsModal/NewsModal";
@@ -80,13 +81,28 @@ function News() {
     <section className="news-section" id="news">
       <div className="news-container">
 
+        {/* ============================= HEADER ============================= */}
+
         <div className="news-header">
-          <div>
-            <p className="news-eyebrow">Latest Updates</p>
-            <h2 className="news-title">News</h2>
+          <div className="news-heading">
+
+            <div className="news-eyebrow">
+              <p className="eyebrow">Club Updates</p>
+            </div>
+
+            <div className="news-main">
+              <h2 className="section-title">
+                What's happening at T&P
+              </h2>
+
+              <p className="section-sub">
+                Stay up to date with the latest announcements, opportunities,
+                events and activities from the Training & Placement Club.
+              </p>
+            </div>
+
           </div>
 
-          {/* We will conditionally show this for admin/editor */}
           {isStaff && (
             <button
               type="button"
@@ -94,10 +110,12 @@ function News() {
               onClick={handleAddNews}
               aria-label="Add news"
             >
-              +
+              <Plus size={20} strokeWidth={2} />
             </button>
           )}
         </div>
+
+        {/* ============================= NEWS ============================= */}
 
         {loading ? (
           <div className="news-loading">

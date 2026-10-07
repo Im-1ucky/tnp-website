@@ -3,6 +3,7 @@ import { handleAuthRoute } from "../routes/authRoutes.js";
 import { handleStaffRoute } from "../routes/staffRoutes.js";
 import { handleAuditRoute } from "../routes/auditRoutes.js";
 import { handleNewsRoute } from "../routes/newsRoutes.js";
+import { handleUploadRoute } from "../routes/uploadRoutes.js";
 
 const STATS_KEY = "instagram_stats";
 
@@ -82,6 +83,12 @@ export default {
       request,
       env
     );
+
+    const uploadResponse = await handleUploadRoute(request, env);
+
+    if (uploadResponse) {
+      return uploadResponse;
+    }
 
     if (newsResponse) {
       return newsResponse;

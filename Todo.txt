@@ -1,4 +1,14 @@
-5. News page with pinned news and editing access
-6. Login and user access
 8. Admin page with analytics
-9. Send Notifications whenever news is added(no delete no edit only added) using webpush
+
+Suggested by Chatgpt
+Fix News backend to allow image-only News, since content is currently required by the controller.
+Verify/protect the audit-log endpoint so only admins can access it.
+Test admin vs editor permissions thoroughly.
+Test session/logout behavior.
+Test News 30-day cleanup and pinned exemption.
+Test R2 upload limits/file types.
+Test Web Push subscription/unsubscription.
+Production Cloudflare bindings/secrets.
+Error/loading states and mobile testing.
+Final security/CORS/cookie review.
+Remove/deprecate anything from the old Express-only setup that isn't needed in production.

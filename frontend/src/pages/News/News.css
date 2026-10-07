@@ -1,56 +1,92 @@
-/* =========================
-   NEWS SECTION
-   ========================= */
+/* ============================= NEWS ============================= */
 
 .news-section {
   position: relative;
-  width: 100%;
-  padding: 70px 0;
+  padding: 5px 0;
+  margin-top: 25px;
 }
 
 .news-container {
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 24px;
 }
 
-/* =========================
-   HEADER
-   ========================= */
+/* ============================= HEADER ============================= */
 
 .news-header {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
 
   margin-bottom: 24px;
 }
 
+.news-heading {
+  min-width: 0;
+}
+
+/* ============================= EYEBROW ============================= */
+
 .news-eyebrow {
-  margin: 0 0 6px;
+  height: 40px;
 
-  color: var(--color-text-muted);
+  display: flex;
+  align-items: flex-start;
+}
 
-  font-size: 0.75rem;
+.news-eyebrow .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.news-title {
-  margin: 0;
+.news-eyebrow .eyebrow::before {
+  content: "";
 
-  color: var(--color-text);
+  width: 28px;
+  height: 1px;
 
-  font-size: clamp(2rem, 3vw, 2.8rem);
-  font-weight: 700;
-  line-height: 1.1;
+  background: var(--color-primary);
 }
 
-/* =========================
-   ADD BUTTON
-   ========================= */
+/* ============================= MAIN CONTENT ============================= */
+
+.news-main {
+  min-width: 0;
+}
+
+.news-main .section-title {
+  margin: 0 0 15px;
+
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.news-main .section-sub {
+  max-width: 640px;
+  margin: 0 0 0px;
+
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* ============================= ADD BUTTON ============================= */
 
 .news-add-button {
   width: 38px;
@@ -60,6 +96,9 @@
   align-items: center;
   justify-content: center;
 
+  flex-shrink: 0;
+
+  margin-top: 40px;
   padding: 0;
 
   border: 1px solid var(--color-border);
@@ -67,10 +106,6 @@
 
   background: var(--color-surface);
   color: var(--color-text);
-
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: 1;
 
   cursor: pointer;
 
@@ -91,9 +126,7 @@
   outline-offset: 3px;
 }
 
-/* =========================
-   CAROUSEL
-   ========================= */
+/* ============================= CAROUSEL ============================= */
 
 .news-carousel {
   width: 100%;
@@ -110,9 +143,7 @@
   align-items: stretch;
 }
 
-/* =========================
-   LOADING / EMPTY
-   ========================= */
+/* ============================= LOADING / EMPTY ============================= */
 
 .news-loading,
 .news-empty {
@@ -128,44 +159,70 @@
   color: var(--color-text-muted);
   background: var(--color-surface);
 
+  font-family: var(--font-body);
   font-size: 0.9rem;
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* ============================= TABLET ============================= */
 
-@media (max-width: 700px) {
+@media (max-width: 1080px) {
+  .news-header {
+    align-items: flex-start;
+  }
+}
+
+/* ============================= MOBILE ============================= */
+
+@media (max-width: 760px) {
   .news-section {
-    padding: 55px 0;
+    padding-top: 0px !important;
+    padding-bottom: 35px !important;
+    margin-top: 0 !important;
   }
 
   .news-container {
     padding: 0 24px;
   }
 
-  .news-header {
-    margin-bottom: 20px;
+  .news-eyebrow {
+    height: auto;
+    margin-bottom: 16px;
   }
 
-  .news-title {
-    font-size: 2rem;
+  .news-main .section-title {
+    font-size: 42px;
+  }
+
+  .news-main .section-sub {
+    margin-top: -10px;
+    margin-bottom: 0px;
+    font-size: 16px;
+  }
+
+  .news-header {
+    margin-bottom: 20px;
   }
 
   .news-add-button {
     width: 36px;
     height: 36px;
 
-    font-size: 1.35rem;
+    margin-top: 0;
   }
 }
 
+/* ============================= SMALL MOBILE ============================= */
+
 @media (max-width: 480px) {
-  .news-section {
-    padding: 45px 0;
+  .news-container {
+    padding: 0 16px;
   }
 
-  .news-container {
-    padding: 0 18px;
+  .news-main .section-title {
+    font-size: 34px;
+  }
+
+  .news-main .section-sub {
+    font-size: 15px;
   }
 }

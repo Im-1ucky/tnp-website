@@ -184,10 +184,10 @@ export async function updateNewsController(request, env) {
   const content = body.content?.trim();
   const image = body.image?.trim() || null;
 
-  if (!title || !content) {
+  if (!title || (!content && !image)) {
     return Response.json(
       {
-        error: "Title and content are required",
+        error: "Title and either content or image are required",
       },
       { status: 400 }
     );

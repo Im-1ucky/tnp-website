@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
+
 
 import "./NewsForm.css";
 
@@ -8,6 +10,7 @@ function NewsForm({ news, onClose, onSaved }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -23,8 +26,49 @@ function NewsForm({ news, onClose, onSaved }) {
       setImage("");
     }
 
+    setSelectedImage(null);
     setError("");
   }, [news]);
+
+  function handleImageChange(event) {
+    const file = event.target.files?.[0] || null;
+
+    if (!file) {
+      setSelectedImage(null);
+      return;
+    }
+
+    setSelectedImage(file);
+    setError("");
+  }
+
+  async function uploadImage() {
+    if (!selectedImage) {
+      return image.trim();
+    }
+
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+
+    const response = await fetch(
+      "/api/uploads/news-image",
+      {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Unable to upload image."
+      );
+    }
+
+    return data.image;
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -33,14 +77,13 @@ function NewsForm({ news, onClose, onSaved }) {
 
     const cleanTitle = title.trim();
     const cleanContent = content.trim();
-    const cleanImage = image.trim();
 
     if (!cleanTitle) {
       setError("Title is required.");
       return;
     }
 
-    if (!cleanContent && !cleanImage) {
+    if (!cleanContent && !image && !selectedImage) {
       setError("Please provide a description or an image.");
       return;
     }
@@ -48,6 +91,11 @@ function NewsForm({ news, onClose, onSaved }) {
     setSaving(true);
 
     try {
+      // Upload a newly selected image first.
+      const imageUrl = await uploadImage();
+
+      const cleanImage = imageUrl?.trim() || "";
+
       const url = isEditing
         ? `/api/news/${news.id}`
         : "/api/news";
@@ -113,7 +161,7 @@ function NewsForm({ news, onClose, onSaved }) {
           disabled={saving}
           aria-label="Close"
         >
-          ×
+          <X size={18} strokeWidth={2} />
         </button>
 
         <div className="news-form-header">
@@ -173,14 +221,23 @@ function NewsForm({ news, onClose, onSaved }) {
 
             <input
               id="news-image"
-              type="text"
-              value={image}
-              onChange={(event) =>
-                setImage(event.target.value)
-              }
-              placeholder="Enter image URL"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={handleImageChange}
               disabled={saving}
             />
+
+            {selectedImage && (
+              <p className="news-form-file-name">
+                Selected: {selectedImage.name}
+              </p>
+            )}
+
+            {!selectedImage && image && (
+              <p className="news-form-file-name">
+                Current image will be kept.
+              </p>
+            )}
           </div>
 
           <p className="news-form-hint">
@@ -214,7 +271,9 @@ function NewsForm({ news, onClose, onSaved }) {
               disabled={saving}
             >
               {saving
-                ? "Saving..."
+                ? selectedImage
+                  ? "Uploading..."
+                  : "Saving..."
                 : isEditing
                   ? "Save Changes"
                   : "Add News"}

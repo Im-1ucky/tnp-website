@@ -256,10 +256,10 @@ var init_authService = __esm({
   }
 });
 
-// .wrangler/tmp/bundle-fkCz7K/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-DnkKwa/middleware-loader.entry.ts
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-fkCz7K/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-DnkKwa/middleware-insertion-facade.js
 init_modules_watch_stub();
 
 // src/workers/worker.js
@@ -1479,10 +1479,10 @@ async function updateNewsController(request, env) {
   const title = body.title?.trim();
   const content = body.content?.trim();
   const image = body.image?.trim() || null;
-  if (!title || !content) {
+  if (!title || !content && !image) {
     return Response.json(
       {
-        error: "Title and content are required"
+        error: "Title and either content or image are required"
       },
       { status: 400 }
     );
@@ -1682,6 +1682,108 @@ async function handleNewsRoute(request, env) {
 }
 __name(handleNewsRoute, "handleNewsRoute");
 
+// src/routes/uploadRoutes.js
+init_modules_watch_stub();
+init_authService();
+var MAX_FILE_SIZE = 10 * 1024 * 1024;
+var ALLOWED_TYPES = /* @__PURE__ */ new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif"
+]);
+async function handleUploadRoute(request, env) {
+  const url = new URL(request.url);
+  if (request.method !== "POST" || url.pathname !== "/api/uploads/news-image") {
+    return null;
+  }
+  const sessionToken = getSessionToken(request);
+  if (!sessionToken) {
+    return Response.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+  const user = await getUserFromSession(env, sessionToken);
+  if (!user) {
+    return Response.json(
+      { error: "Invalid or expired session" },
+      { status: 401 }
+    );
+  }
+  if (user.role !== "admin" && user.role !== "editor") {
+    return Response.json(
+      { error: "You do not have permission to upload images" },
+      { status: 403 }
+    );
+  }
+  let formData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return Response.json(
+      { error: "Invalid multipart form data" },
+      { status: 400 }
+    );
+  }
+  const file = formData.get("image");
+  if (!(file instanceof File)) {
+    return Response.json(
+      { error: "No image was provided" },
+      { status: 400 }
+    );
+  }
+  if (!ALLOWED_TYPES.has(file.type)) {
+    return Response.json(
+      {
+        error: "Only JPEG, PNG, WebP, and GIF images are allowed"
+      },
+      { status: 400 }
+    );
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    return Response.json(
+      {
+        error: "Image must be 10 MB or smaller"
+      },
+      { status: 400 }
+    );
+  }
+  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const fileName = `${crypto.randomUUID()}.${extension}`;
+  const filePath = `news/${fileName}`;
+  const fileBuffer = await file.arrayBuffer();
+  const uploadResponse = await fetch(
+    `${env.SUPABASE_URL}/storage/v1/object/tnp-images/${filePath}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`,
+        apikey: env.SUPABASE_SECRET_KEY,
+        "Content-Type": file.type,
+        "x-upsert": "false"
+      },
+      body: fileBuffer
+    }
+  );
+  if (!uploadResponse.ok) {
+    const errorText = await uploadResponse.text();
+    console.error(
+      "Supabase image upload failed:",
+      errorText
+    );
+    return Response.json(
+      { error: "Failed to upload image" },
+      { status: 500 }
+    );
+  }
+  const imageUrl = `${env.SUPABASE_URL}/storage/v1/object/public/tnp-images/${filePath}`;
+  return Response.json({
+    image: imageUrl
+  });
+}
+__name(handleUploadRoute, "handleUploadRoute");
+
 // src/workers/worker.js
 var STATS_KEY = "instagram_stats";
 async function fetchAndStoreStats(env) {
@@ -1743,6 +1845,10 @@ var worker_default = {
       request,
       env
     );
+    const uploadResponse = await handleUploadRoute(request, env);
+    if (uploadResponse) {
+      return uploadResponse;
+    }
     if (newsResponse) {
       return newsResponse;
     }
@@ -1816,7 +1922,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-fkCz7K/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-DnkKwa/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -1849,7 +1955,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-fkCz7K/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-DnkKwa/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
