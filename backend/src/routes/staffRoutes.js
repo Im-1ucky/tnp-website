@@ -3,6 +3,7 @@ import {
   getStaffController,
   updateStaffRoleController,
   resetStaffPasswordController,
+  deleteStaffController,
 } from "../controllers/staffController.js";
 
 export async function handleStaffRoute(request, env) {
@@ -22,6 +23,18 @@ export async function handleStaffRoute(request, env) {
     url.pathname === "/api/staff"
   ) {
     return createStaffController(request, env);
+  }
+
+  if (
+    request.method === "DELETE" &&
+    /^\/api\/staff\/\d+$/.test(
+      url.pathname
+    )
+  ) {
+    return deleteStaffController(
+      request,
+      env
+    );
   }
 
   // PATCH /api/staff/:id/role

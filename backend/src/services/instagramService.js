@@ -1,5 +1,55 @@
 const GRAPH_URL = "https://graph.instagram.com";
 
+export async function refreshInstagramStats(env) {
+  const MAX_RETRIES = 3;
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log(
+        `Instagram stats attempt ${attempt}/${MAX_RETRIES}`
+      );
+
+      const stats = await getInstagramStats(
+        env.INSTAGRAM_ACCESS_TOKEN
+      );
+
+      const data = {
+        ...stats,
+        lastUpdated: new Date().toISOString(),
+        lastUpdateSuccessful: true,
+      };
+
+      await env.INSTAGRAM_STATS.put(
+        "instagram_stats",
+        JSON.stringify(data)
+      );
+
+      console.log(
+        "Instagram stats updated successfully."
+      );
+
+      return data;
+    } catch (error) {
+      console.error(
+        `Instagram stats attempt ${attempt} failed:`,
+        error.message
+      );
+
+      if (attempt < MAX_RETRIES) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 2000)
+        );
+      }
+    }
+  }
+
+  console.error(
+    "Instagram stats failed after all retries. Keeping old stats."
+  );
+
+  return null;
+}
+
 async function instagramRequest(endpoint, accessToken) {
   const url = new URL(`${GRAPH_URL}${endpoint}`);
 

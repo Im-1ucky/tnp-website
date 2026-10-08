@@ -1,5 +1,89 @@
 import { hashPassword } from "../utils/crypto.js";
 
+export async function deleteStaff(
+  env,
+  userId,
+  deletingAdminId
+) {
+  const target = await env.DB
+    .prepare(
+      `
+      SELECT
+        id,
+        name,
+        email,
+        role
+      FROM users
+      WHERE id = ?
+      `
+    )
+    .bind(userId)
+    .first();
+
+  if (!target) {
+    return {
+      error: "Staff account not found",
+      status: 404,
+    };
+  }
+
+  if (
+    Number(userId) ===
+    Number(deletingAdminId)
+  ) {
+    return {
+      error: "You cannot delete your own account",
+      status: 400,
+    };
+  }
+
+  if (target.role === "admin") {
+    const adminCount =
+      await env.DB
+        .prepare(
+          `
+          SELECT COUNT(*) AS count
+          FROM users
+          WHERE role = 'admin'
+          `
+        )
+        .first();
+
+    if (Number(adminCount?.count || 0) <= 1) {
+      return {
+        error: "Cannot delete the last admin",
+        status: 400,
+      };
+    }
+  }
+
+  /*
+   * Sessions are automatically deleted because
+   * users -> sessions uses ON DELETE CASCADE.
+   *
+   * Audit logs are preserved because their user_id
+   * now uses ON DELETE SET NULL.
+   *
+   * News remains untouched because creator/updater
+   * identity is stored separately.
+   */
+
+  await env.DB
+    .prepare(
+      `
+      DELETE FROM users
+      WHERE id = ?
+      `
+    )
+    .bind(userId)
+    .run();
+
+  return {
+    deleted: true,
+    staff: target,
+  };
+}
+
 export async function updateStaffRole(
   env,
   userId,

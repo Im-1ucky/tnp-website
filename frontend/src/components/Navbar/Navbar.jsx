@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
 
 const navLinks = [
@@ -52,6 +53,7 @@ function MoonIcon() {
 }
 
 function Navbar({ onEasterEgg }) {
+  const { isAdmin } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState("dark");
@@ -229,11 +231,26 @@ function Navbar({ onEasterEgg }) {
           <div className="nav-actions">
             {/* Desktop links */}
             <div className="nav-links">
+              {isAdmin && (
+                <a
+                  href="/admin"
+                  className={
+                    window.location.pathname === "/admin"
+                      ? "active"
+                      : ""
+                  }
+                >
+                  Admin
+                </a>
+              )}
+
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className={activeSection === link.id ? "active" : ""}
+                  className={
+                    activeSection === link.id ? "active" : ""
+                  }
                   onClick={() => setActiveSection(link.id)}
                 >
                   {link.label}
@@ -245,10 +262,7 @@ function Navbar({ onEasterEgg }) {
             <button
               type="button"
               className={`theme-toggle ${menuOpen ? "menu-open" : ""}`}
-              onClick={() => {
-                handleEasterEggClick();
-                toggleTheme();
-              }}
+              onClick={toggleTheme}
               aria-label={`Switch to ${
                 theme === "dark" ? "light" : "dark"
               } mode`}
@@ -282,6 +296,20 @@ function Navbar({ onEasterEgg }) {
           menuOpen ? "open" : ""
         }`}
       >
+        {isAdmin && (
+          <a
+            href="/admin"
+            className={
+              window.location.pathname === "/admin"
+                ? "active"
+                : ""
+            }
+            onClick={closeMenu}
+          >
+            Admin
+          </a>
+        )}
+
         {navLinks.map((link) => (
           <a
             key={link.href}

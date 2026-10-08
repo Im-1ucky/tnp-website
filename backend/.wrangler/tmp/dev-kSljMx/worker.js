@@ -256,10 +256,10 @@ var init_authService = __esm({
   }
 });
 
-// .wrangler/tmp/bundle-DnkKwa/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-X8i4Q9/middleware-loader.entry.ts
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-DnkKwa/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-X8i4Q9/middleware-insertion-facade.js
 init_modules_watch_stub();
 
 // src/workers/worker.js
@@ -268,6 +268,47 @@ init_modules_watch_stub();
 // src/services/instagramService.js
 init_modules_watch_stub();
 var GRAPH_URL = "https://graph.instagram.com";
+async function refreshInstagramStats(env) {
+  const MAX_RETRIES = 3;
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log(
+        `Instagram stats attempt ${attempt}/${MAX_RETRIES}`
+      );
+      const stats = await getInstagramStats(
+        env.INSTAGRAM_ACCESS_TOKEN
+      );
+      const data = {
+        ...stats,
+        lastUpdated: (/* @__PURE__ */ new Date()).toISOString(),
+        lastUpdateSuccessful: true
+      };
+      await env.INSTAGRAM_STATS.put(
+        "instagram_stats",
+        JSON.stringify(data)
+      );
+      console.log(
+        "Instagram stats updated successfully."
+      );
+      return data;
+    } catch (error) {
+      console.error(
+        `Instagram stats attempt ${attempt} failed:`,
+        error.message
+      );
+      if (attempt < MAX_RETRIES) {
+        await new Promise(
+          (resolve) => setTimeout(resolve, 2e3)
+        );
+      }
+    }
+  }
+  console.error(
+    "Instagram stats failed after all retries. Keeping old stats."
+  );
+  return null;
+}
+__name(refreshInstagramStats, "refreshInstagramStats");
 async function instagramRequest(endpoint, accessToken) {
   const url = new URL(`${GRAPH_URL}${endpoint}`);
   url.searchParams.set("access_token", accessToken);
@@ -385,32 +426,37 @@ init_authService();
 // src/utils/cookies.js
 init_modules_watch_stub();
 var COOKIE_NAME = "tnp_session";
-function setSessionCookie(headers, token, maxAge) {
-  headers.append(
-    "Set-Cookie",
-    [
-      `${COOKIE_NAME}=${token}`,
-      "HttpOnly",
-      "Secure",
-      "SameSite=Strict",
-      "Path=/",
-      `Max-Age=${maxAge}`
-    ].join("; ")
-  );
+function isSecureRequest(request) {
+  const url = new URL(request.url);
+  return url.protocol === "https:";
+}
+__name(isSecureRequest, "isSecureRequest");
+function setSessionCookie(headers, token, maxAge, request) {
+  const cookie = [
+    `${COOKIE_NAME}=${token}`,
+    "HttpOnly",
+    "SameSite=Strict",
+    "Path=/",
+    `Max-Age=${maxAge}`
+  ];
+  if (isSecureRequest(request)) {
+    cookie.push("Secure");
+  }
+  headers.append("Set-Cookie", cookie.join("; "));
 }
 __name(setSessionCookie, "setSessionCookie");
-function clearSessionCookie(headers) {
-  headers.append(
-    "Set-Cookie",
-    [
-      `${COOKIE_NAME}=`,
-      "HttpOnly",
-      "Secure",
-      "SameSite=Strict",
-      "Path=/",
-      "Max-Age=0"
-    ].join("; ")
-  );
+function clearSessionCookie(headers, request) {
+  const cookie = [
+    `${COOKIE_NAME}=`,
+    "HttpOnly",
+    "SameSite=Strict",
+    "Path=/",
+    "Max-Age=0"
+  ];
+  if (isSecureRequest(request)) {
+    cookie.push("Secure");
+  }
+  headers.append("Set-Cookie", cookie.join("; "));
 }
 __name(clearSessionCookie, "clearSessionCookie");
 function getSessionToken(request) {
@@ -428,6 +474,114 @@ function getSessionToken(request) {
   return null;
 }
 __name(getSessionToken, "getSessionToken");
+
+// src/services/auditService.js
+init_modules_watch_stub();
+var MAX_AUDIT_LOGS = 1e3;
+var DASHBOARD_AUDIT_LOGS = 100;
+async function createAuditLog(env, {
+  userId,
+  action,
+  entityType,
+  entityId = null,
+  details = null
+}) {
+  let userName = null;
+  let userEmail = null;
+  if (userId !== null && userId !== void 0) {
+    const user = await env.DB.prepare(
+      `
+        SELECT
+          name,
+          email
+        FROM users
+        WHERE id = ?
+        `
+    ).bind(userId).first();
+    if (user) {
+      userName = user.name;
+      userEmail = user.email;
+    }
+  }
+  await env.DB.prepare(
+    `
+      INSERT INTO audit_logs (
+        user_id,
+        user_name,
+        user_email,
+        action,
+        entity_type,
+        entity_id,
+        details
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      `
+  ).bind(
+    userId ?? null,
+    userName,
+    userEmail,
+    action,
+    entityType,
+    entityId,
+    details
+  ).run();
+  await env.DB.prepare(
+    `
+      DELETE FROM audit_logs
+      WHERE id NOT IN (
+        SELECT id
+        FROM audit_logs
+        ORDER BY
+          created_at DESC,
+          id DESC
+        LIMIT ?
+      )
+      `
+  ).bind(MAX_AUDIT_LOGS).run();
+}
+__name(createAuditLog, "createAuditLog");
+async function getAuditLogs(env) {
+  const result = await env.DB.prepare(
+    `
+      SELECT
+        a.id,
+        a.user_id,
+
+        a.user_name,
+        a.user_email,
+
+        a.action,
+        a.entity_type,
+        a.entity_id,
+        a.details,
+        a.created_at
+
+      FROM audit_logs a
+
+      ORDER BY
+        a.created_at DESC,
+        a.id DESC
+
+      LIMIT ?
+      `
+  ).bind(DASHBOARD_AUDIT_LOGS).all();
+  return result.results;
+}
+__name(getAuditLogs, "getAuditLogs");
+async function deleteAuditLogs(env, ids) {
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return 0;
+  }
+  const placeholders = ids.map(() => "?").join(", ");
+  const result = await env.DB.prepare(
+    `
+      DELETE FROM audit_logs
+      WHERE id IN (${placeholders})
+      `
+  ).bind(...ids).run();
+  return result.meta?.changes ?? 0;
+}
+__name(deleteAuditLogs, "deleteAuditLogs");
 
 // src/controllers/authController.js
 var SESSION_DURATION2 = 60 * 60 * 24 * 7;
@@ -453,13 +607,20 @@ async function login(request, env) {
         { status: 401 }
       );
     }
+    await createAuditLog(env, {
+      userId: result.user.id,
+      action: "LOGIN",
+      entityType: "user",
+      entityId: result.user.id
+    });
     const headers = new Headers({
       "Content-Type": "application/json"
     });
     setSessionCookie(
       headers,
       result.token,
-      SESSION_DURATION2
+      SESSION_DURATION2,
+      request
     );
     return new Response(
       JSON.stringify({
@@ -486,7 +647,7 @@ async function logout(request, env) {
     const headers = new Headers({
       "Content-Type": "application/json"
     });
-    clearSessionCookie(headers);
+    clearSessionCookie(headers, request);
     return new Response(
       JSON.stringify({
         message: "Logged out successfully"
@@ -549,6 +710,57 @@ init_modules_watch_stub();
 // src/services/staffService.js
 init_modules_watch_stub();
 init_crypto();
+async function deleteStaff(env, userId, deletingAdminId) {
+  const target = await env.DB.prepare(
+    `
+      SELECT
+        id,
+        name,
+        email,
+        role
+      FROM users
+      WHERE id = ?
+      `
+  ).bind(userId).first();
+  if (!target) {
+    return {
+      error: "Staff account not found",
+      status: 404
+    };
+  }
+  if (Number(userId) === Number(deletingAdminId)) {
+    return {
+      error: "You cannot delete your own account",
+      status: 400
+    };
+  }
+  if (target.role === "admin") {
+    const adminCount = await env.DB.prepare(
+      `
+          SELECT COUNT(*) AS count
+          FROM users
+          WHERE role = 'admin'
+          `
+    ).first();
+    if (Number(adminCount?.count || 0) <= 1) {
+      return {
+        error: "Cannot delete the last admin",
+        status: 400
+      };
+    }
+  }
+  await env.DB.prepare(
+    `
+      DELETE FROM users
+      WHERE id = ?
+      `
+  ).bind(userId).run();
+  return {
+    deleted: true,
+    staff: target
+  };
+}
+__name(deleteStaff, "deleteStaff");
 async function updateStaffRole(env, userId, newRole) {
   const target = await env.DB.prepare(
     `
@@ -683,60 +895,6 @@ __name(resetStaffPassword, "resetStaffPassword");
 
 // src/controllers/staffController.js
 init_authService();
-
-// src/services/auditService.js
-init_modules_watch_stub();
-async function createAuditLog(env, {
-  userId,
-  action,
-  entityType,
-  entityId = null,
-  details = null
-}) {
-  await env.DB.prepare(
-    `
-      INSERT INTO audit_logs (
-        user_id,
-        action,
-        entity_type,
-        entity_id,
-        details
-      )
-      VALUES (?, ?, ?, ?, ?)
-      `
-  ).bind(
-    userId,
-    action,
-    entityType,
-    entityId,
-    details
-  ).run();
-}
-__name(createAuditLog, "createAuditLog");
-async function getAuditLogs(env) {
-  const result = await env.DB.prepare(
-    `
-      SELECT
-        a.id,
-        a.user_id,
-        u.name AS user_name,
-        u.email AS user_email,
-        a.action,
-        a.entity_type,
-        a.entity_id,
-        a.details,
-        a.created_at
-      FROM audit_logs a
-      JOIN users u
-        ON u.id = a.user_id
-      ORDER BY a.created_at DESC
-      `
-  ).all();
-  return result.results;
-}
-__name(getAuditLogs, "getAuditLogs");
-
-// src/controllers/staffController.js
 async function getStaffController(request, env) {
   const token = getSessionToken(request);
   if (!token) {
@@ -772,6 +930,93 @@ async function getStaffController(request, env) {
   }
 }
 __name(getStaffController, "getStaffController");
+async function deleteStaffController(request, env) {
+  const token = getSessionToken(request);
+  if (!token) {
+    return Response.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+  const user = await getUserFromSession(
+    env,
+    token
+  );
+  if (!user) {
+    return Response.json(
+      {
+        error: "Invalid or expired session"
+      },
+      { status: 401 }
+    );
+  }
+  if (user.role !== "admin") {
+    return Response.json(
+      {
+        error: "Admin access required"
+      },
+      { status: 403 }
+    );
+  }
+  const url = new URL(request.url);
+  const parts = url.pathname.split("/");
+  const userId = Number(parts[3]);
+  if (!Number.isInteger(userId) || userId <= 0) {
+    return Response.json(
+      {
+        error: "Invalid staff ID"
+      },
+      { status: 400 }
+    );
+  }
+  try {
+    const result = await deleteStaff(
+      env,
+      userId,
+      user.id
+    );
+    if (result.error) {
+      return Response.json(
+        {
+          error: result.error
+        },
+        {
+          status: result.status || 400
+        }
+      );
+    }
+    await createAuditLog(
+      env,
+      {
+        userId: user.id,
+        action: "DELETE_STAFF",
+        entityType: "staff",
+        entityId: result.staff.id,
+        details: JSON.stringify({
+          deletedName: result.staff.name,
+          deletedEmail: result.staff.email,
+          deletedRole: result.staff.role
+        })
+      }
+    );
+    return Response.json({
+      message: "Staff account deleted successfully",
+      staff: result.staff
+    });
+  } catch (error) {
+    console.error(
+      "Delete staff error:",
+      error
+    );
+    return Response.json(
+      {
+        error: "Failed to delete staff account"
+      },
+      { status: 500 }
+    );
+  }
+}
+__name(deleteStaffController, "deleteStaffController");
 async function createStaffController(request, env) {
   const token = getSessionToken(request);
   if (!token) {
@@ -1059,6 +1304,14 @@ async function handleStaffRoute(request, env) {
   if (request.method === "POST" && url.pathname === "/api/staff") {
     return createStaffController(request, env);
   }
+  if (request.method === "DELETE" && /^\/api\/staff\/\d+$/.test(
+    url.pathname
+  )) {
+    return deleteStaffController(
+      request,
+      env
+    );
+  }
   if (request.method === "PATCH" && url.pathname.match(/^\/api\/staff\/\d+\/role$/)) {
     return updateStaffRoleController(request, env);
   }
@@ -1075,6 +1328,78 @@ init_modules_watch_stub();
 // src/controllers/auditController.js
 init_modules_watch_stub();
 init_authService();
+async function deleteAuditLogsController(request, env) {
+  const token = getSessionToken(request);
+  if (!token) {
+    return Response.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+  const user = await getUserFromSession(env, token);
+  if (!user) {
+    return Response.json(
+      { error: "Invalid or expired session" },
+      { status: 401 }
+    );
+  }
+  if (user.role !== "admin") {
+    return Response.json(
+      { error: "Admin access required" },
+      { status: 403 }
+    );
+  }
+  try {
+    const body = await request.json();
+    const ids = body.ids;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return Response.json(
+        { error: "No audit logs selected" },
+        { status: 400 }
+      );
+    }
+    const validIds = [
+      ...new Set(
+        ids.map(Number).filter(
+          (id) => Number.isInteger(id) && id > 0
+        )
+      )
+    ];
+    if (validIds.length === 0) {
+      return Response.json(
+        { error: "Invalid audit log IDs" },
+        { status: 400 }
+      );
+    }
+    const deletedCount = await deleteAuditLogs(
+      env,
+      validIds
+    );
+    await createAuditLog(env, {
+      userId: user.id,
+      action: "DELETE_AUDIT_LOGS",
+      entityType: "audit_logs",
+      details: JSON.stringify({
+        deletedCount,
+        deletedIds: validIds
+      })
+    });
+    return Response.json({
+      message: "Audit logs deleted successfully",
+      deletedCount
+    });
+  } catch (error) {
+    console.error(
+      "Delete audit logs error:",
+      error
+    );
+    return Response.json(
+      { error: "Unable to delete audit logs" },
+      { status: 500 }
+    );
+  }
+}
+__name(deleteAuditLogsController, "deleteAuditLogsController");
 async function getAuditLogsController(request, env) {
   const token = getSessionToken(request);
   if (!token) {
@@ -1120,6 +1445,9 @@ async function handleAuditRoute(request, env) {
   if (request.method === "GET" && url.pathname === "/api/audit-logs") {
     return getAuditLogsController(request, env);
   }
+  if (request.method === "DELETE" && url.pathname === "/api/audit-logs") {
+    return deleteAuditLogsController(request, env);
+  }
   return null;
 }
 __name(handleAuditRoute, "handleAuditRoute");
@@ -1132,6 +1460,80 @@ init_modules_watch_stub();
 
 // src/services/newsService.js
 init_modules_watch_stub();
+async function deleteNewsImage(env, imageUrl) {
+  if (!imageUrl) {
+    return {
+      attempted: false,
+      deleted: false,
+      reason: "No image"
+    };
+  }
+  try {
+    const url = new URL(imageUrl);
+    const publicPrefix = "/storage/v1/object/public/tnp-images/";
+    if (!url.pathname.startsWith(publicPrefix)) {
+      console.warn(
+        "Skipping unknown image URL:",
+        imageUrl
+      );
+      return {
+        attempted: false,
+        deleted: false,
+        reason: "Unknown image URL"
+      };
+    }
+    const filePath = decodeURIComponent(
+      url.pathname.slice(publicPrefix.length)
+    );
+    if (!filePath) {
+      return {
+        attempted: false,
+        deleted: false,
+        reason: "Invalid image path"
+      };
+    }
+    const response = await fetch(
+      `${env.SUPABASE_URL}/storage/v1/object/tnp-images/${filePath}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey: env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(
+        "Failed to delete Supabase image:",
+        filePath,
+        errorText
+      );
+      return {
+        attempted: true,
+        deleted: false,
+        filePath,
+        reason: "Supabase deletion failed"
+      };
+    }
+    return {
+      attempted: true,
+      deleted: true,
+      filePath
+    };
+  } catch (error) {
+    console.error(
+      "Supabase image deletion error:",
+      error
+    );
+    return {
+      attempted: true,
+      deleted: false,
+      reason: "Supabase deletion error"
+    };
+  }
+}
+__name(deleteNewsImage, "deleteNewsImage");
 async function getAllNews(env) {
   const result = await env.DB.prepare(
     `
@@ -1144,15 +1546,38 @@ async function getAllNews(env) {
         n.pinned_at,
         n.created_at,
         n.updated_at,
+
         n.created_by,
         n.updated_by,
-        creator.name AS created_by_name,
-        updater.name AS updated_by_name
+
+        COALESCE(
+          creator.name,
+          n.created_by_name
+        ) AS created_by_name,
+
+        COALESCE(
+          creator.email,
+          n.created_by_email
+        ) AS created_by_email,
+
+        COALESCE(
+          updater.name,
+          n.updated_by_name
+        ) AS updated_by_name,
+
+        COALESCE(
+          updater.email,
+          n.updated_by_email
+        ) AS updated_by_email
+
       FROM news n
-      JOIN users creator
+
+      LEFT JOIN users creator
         ON creator.id = n.created_by
+
       LEFT JOIN users updater
         ON updater.id = n.updated_by
+
       ORDER BY
         n.pinned DESC,
         n.pinned_at DESC,
@@ -1174,15 +1599,38 @@ async function getNewsById(env, newsId) {
         n.pinned_at,
         n.created_at,
         n.updated_at,
+
         n.created_by,
         n.updated_by,
-        creator.name AS created_by_name,
-        updater.name AS updated_by_name
+
+        COALESCE(
+          creator.name,
+          n.created_by_name
+        ) AS created_by_name,
+
+        COALESCE(
+          creator.email,
+          n.created_by_email
+        ) AS created_by_email,
+
+        COALESCE(
+          updater.name,
+          n.updated_by_name
+        ) AS updated_by_name,
+
+        COALESCE(
+          updater.email,
+          n.updated_by_email
+        ) AS updated_by_email
+
       FROM news n
-      JOIN users creator
+
+      LEFT JOIN users creator
         ON creator.id = n.created_by
+
       LEFT JOIN users updater
         ON updater.id = n.updated_by
+
       WHERE n.id = ?
       `
   ).bind(newsId).first();
@@ -1192,18 +1640,27 @@ __name(getNewsById, "getNewsById");
 async function cleanupNonPinnedNews(env) {
   const result = await env.DB.prepare(
     `
-      SELECT id
+      SELECT
+        id,
+        title,
+        image
       FROM news
       WHERE pinned = 0
-      ORDER BY created_at DESC, id DESC
+      ORDER BY
+        created_at DESC,
+        id DESC
       LIMIT -1 OFFSET 30
       `
   ).all();
   const oldNews = result.results;
   if (oldNews.length === 0) {
-    return [];
+    return {
+      deletedIds: [],
+      imageDeletionResults: []
+    };
   }
   const deletedIds = [];
+  const imageDeletionResults = [];
   for (const news of oldNews) {
     await env.DB.prepare(
       `
@@ -1211,21 +1668,56 @@ async function cleanupNonPinnedNews(env) {
         WHERE id = ?
         `
     ).bind(news.id).run();
+    const imageDeletion = await deleteNewsImage(
+      env,
+      news.image
+    );
     deletedIds.push(news.id);
+    imageDeletionResults.push({
+      newsId: news.id,
+      title: news.title,
+      ...imageDeletion
+    });
   }
-  return deletedIds;
+  return {
+    deletedIds,
+    imageDeletionResults
+  };
 }
 __name(cleanupNonPinnedNews, "cleanupNonPinnedNews");
-async function createNews(env, { title, content, image, createdBy }) {
+async function createNews(env, {
+  title,
+  content,
+  image,
+  createdBy
+}) {
+  const creator = await env.DB.prepare(
+    `
+      SELECT
+        name,
+        email
+      FROM users
+      WHERE id = ?
+      `
+  ).bind(createdBy).first();
+  if (!creator) {
+    return {
+      error: "Creator account not found",
+      status: 404
+    };
+  }
   const news = await env.DB.prepare(
     `
       INSERT INTO news (
         title,
         content,
         image,
-        created_by
+        created_by,
+        created_by_name,
+        created_by_email
       )
-      VALUES (?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?)
+
       RETURNING
         id,
         title,
@@ -1236,25 +1728,55 @@ async function createNews(env, { title, content, image, createdBy }) {
         created_at,
         updated_at,
         created_by,
-        updated_by
+        updated_by,
+        created_by_name,
+        created_by_email,
+        updated_by_name,
+        updated_by_email
       `
   ).bind(
     title,
     content,
     image ?? null,
-    createdBy
+    createdBy,
+    creator.name,
+    creator.email
   ).first();
-  const deletedIds = await cleanupNonPinnedNews(env);
+  const cleanupResult = await cleanupNonPinnedNews(env);
   return {
     news,
-    deletedIds
+    deletedIds: cleanupResult.deletedIds,
+    imageDeletionResults: cleanupResult.imageDeletionResults
   };
 }
 __name(createNews, "createNews");
-async function updateNews(env, newsId, { title, content, image, updatedBy }) {
-  const existing = await getNewsById(env, newsId);
+async function updateNews(env, newsId, {
+  title,
+  content,
+  image,
+  updatedBy
+}) {
+  const existing = await getNewsById(
+    env,
+    newsId
+  );
   if (!existing) {
     return null;
+  }
+  const updater = await env.DB.prepare(
+    `
+      SELECT
+        name,
+        email
+      FROM users
+      WHERE id = ?
+      `
+  ).bind(updatedBy).first();
+  if (!updater) {
+    return {
+      error: "Updater account not found",
+      status: 404
+    };
   }
   const news = await env.DB.prepare(
     `
@@ -1264,8 +1786,12 @@ async function updateNews(env, newsId, { title, content, image, updatedBy }) {
         content = ?,
         image = ?,
         updated_at = CURRENT_TIMESTAMP,
-        updated_by = ?
+        updated_by = ?,
+        updated_by_name = ?,
+        updated_by_email = ?
+
       WHERE id = ?
+
       RETURNING
         id,
         title,
@@ -1276,22 +1802,39 @@ async function updateNews(env, newsId, { title, content, image, updatedBy }) {
         created_at,
         updated_at,
         created_by,
-        updated_by
+        updated_by,
+        created_by_name,
+        created_by_email,
+        updated_by_name,
+        updated_by_email
       `
   ).bind(
     title,
     content,
     image ?? null,
     updatedBy,
+    updater.name,
+    updater.email,
     newsId
   ).first();
+  let imageDeletion = null;
+  if (existing.image && existing.image !== news.image) {
+    imageDeletion = await deleteNewsImage(
+      env,
+      existing.image
+    );
+  }
   return {
-    news
+    news,
+    imageDeletion
   };
 }
 __name(updateNews, "updateNews");
 async function deleteNews(env, newsId) {
-  const existing = await getNewsById(env, newsId);
+  const existing = await getNewsById(
+    env,
+    newsId
+  );
   if (!existing) {
     return null;
   }
@@ -1301,11 +1844,21 @@ async function deleteNews(env, newsId) {
       WHERE id = ?
       `
   ).bind(newsId).run();
-  return existing;
+  const imageDeletion = await deleteNewsImage(
+    env,
+    existing.image
+  );
+  return {
+    ...existing,
+    imageDeletion
+  };
 }
 __name(deleteNews, "deleteNews");
 async function toggleNewsPin(env, newsId) {
-  const existing = await getNewsById(env, newsId);
+  const existing = await getNewsById(
+    env,
+    newsId
+  );
   if (!existing) {
     return null;
   }
@@ -1316,7 +1869,9 @@ async function toggleNewsPin(env, newsId) {
       SET
         pinned = ?,
         pinned_at = ?
+
       WHERE id = ?
+
       RETURNING
         id,
         title,
@@ -1327,19 +1882,27 @@ async function toggleNewsPin(env, newsId) {
         created_at,
         updated_at,
         created_by,
-        updated_by
+        updated_by,
+        created_by_name,
+        created_by_email,
+        updated_by_name,
+        updated_by_email
       `
   ).bind(
     newPinnedState,
     newPinnedState ? (/* @__PURE__ */ new Date()).toISOString() : null,
     newsId
   ).first();
-  const deletedIds = newPinnedState === 0 ? await cleanupNonPinnedNews(env) : [];
+  const cleanupResult = newPinnedState === 0 ? await cleanupNonPinnedNews(env) : {
+    deletedIds: [],
+    imageDeletionResults: []
+  };
   return {
     news,
     previousPinned: existing.pinned,
     pinned: newPinnedState,
-    deletedIds
+    deletedIds: cleanupResult.deletedIds,
+    imageDeletionResults: cleanupResult.imageDeletionResults
   };
 }
 __name(toggleNewsPin, "toggleNewsPin");
@@ -1416,7 +1979,8 @@ async function createNewsController(request, env) {
       entityId: result.news.id,
       details: JSON.stringify({
         title: result.news.title,
-        automaticallyDeletedIds: result.deletedIds
+        automaticallyDeletedIds: result.deletedIds,
+        imageDeletionResults: result.imageDeletionResults
       })
     });
     return Response.json(
@@ -1479,10 +2043,10 @@ async function updateNewsController(request, env) {
   const title = body.title?.trim();
   const content = body.content?.trim();
   const image = body.image?.trim() || null;
-  if (!title || !content && !image) {
+  if (!title || !content) {
     return Response.json(
       {
-        error: "Title and either content or image are required"
+        error: "Title and content are required"
       },
       { status: 400 }
     );
@@ -1510,7 +2074,8 @@ async function updateNewsController(request, env) {
       entityType: "news",
       entityId: newsId,
       details: JSON.stringify({
-        title: result.news.title
+        title: result.news.title,
+        imageDeletion: result.imageDeletion
       })
     });
     return Response.json({
@@ -1571,7 +2136,8 @@ async function deleteNewsController(request, env) {
       entityType: "news",
       entityId: newsId,
       details: JSON.stringify({
-        title: news.title
+        title: news.title,
+        imageDeletion: news.imageDeletion
       })
     });
     return Response.json({
@@ -1639,7 +2205,8 @@ async function toggleNewsPinController(request, env) {
         title: result.news.title,
         previousPinned: result.previousPinned,
         pinned: result.pinned,
-        automaticallyDeletedIds: result.deletedIds
+        automaticallyDeletedIds: result.deletedIds,
+        imageDeletionResults: result.imageDeletionResults
       })
     });
     return Response.json({
@@ -1784,48 +2351,227 @@ async function handleUploadRoute(request, env) {
 }
 __name(handleUploadRoute, "handleUploadRoute");
 
-// src/workers/worker.js
-var STATS_KEY = "instagram_stats";
-async function fetchAndStoreStats(env) {
-  const MAX_RETRIES = 3;
-  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      console.log(`Instagram stats attempt ${attempt}/${MAX_RETRIES}`);
-      const stats = await getInstagramStats(
-        env.INSTAGRAM_ACCESS_TOKEN
-      );
-      const data = {
-        ...stats,
-        lastUpdated: (/* @__PURE__ */ new Date()).toISOString(),
-        lastUpdateSuccessful: true
-      };
-      await env.INSTAGRAM_STATS.put(
-        STATS_KEY,
-        JSON.stringify(data)
-      );
-      console.log("Instagram stats updated successfully.");
-      return data;
-    } catch (error) {
-      console.error(
-        `Instagram stats attempt ${attempt} failed:`,
-        error.message
-      );
-      if (attempt < MAX_RETRIES) {
-        await new Promise((resolve) => setTimeout(resolve, 2e3));
-      }
-    }
-  }
-  console.error(
-    "Instagram stats failed after all retries. Keeping old stats."
+// src/routes/adminRoutes.js
+init_modules_watch_stub();
+
+// src/controllers/adminController.js
+init_modules_watch_stub();
+
+// src/services/analyticsService.js
+init_modules_watch_stub();
+async function recordVisit(env) {
+  await env.DB.prepare(
+    `
+      INSERT INTO visits (visited_at)
+      VALUES (CURRENT_TIMESTAMP)
+      `
+  ).run();
+}
+__name(recordVisit, "recordVisit");
+async function getVisitStats(env) {
+  const result = await env.DB.prepare(
+    `
+      SELECT
+        COUNT(
+          CASE
+            WHEN date(visited_at) = date('now')
+            THEN 1
+          END
+        ) AS today,
+
+        COUNT(
+          CASE
+            WHEN date(visited_at) >= date('now', 'weekday 0', '-6 days')
+            THEN 1
+          END
+        ) AS week,
+
+        COUNT(
+          CASE
+            WHEN strftime('%Y-%m', visited_at) =
+                 strftime('%Y-%m', 'now')
+            THEN 1
+          END
+        ) AS month
+
+      FROM visits
+      `
+  ).first();
+  return {
+    today: result?.today ?? 0,
+    week: result?.week ?? 0,
+    month: result?.month ?? 0
+  };
+}
+__name(getVisitStats, "getVisitStats");
+async function getDailyVisits(env, days) {
+  const safeDays = Math.min(
+    Math.max(Number(days) || 7, 1),
+    365
   );
+  const result = await env.DB.prepare(
+    `
+      SELECT
+        date(visited_at) AS date,
+        COUNT(*) AS visits
+      FROM visits
+      WHERE visited_at >= datetime(
+        'now',
+        ?
+      )
+      GROUP BY date(visited_at)
+      ORDER BY date(visited_at) ASC
+      `
+  ).bind(`-${safeDays - 1} days`).all();
+  return result.results;
+}
+__name(getDailyVisits, "getDailyVisits");
+
+// src/controllers/adminController.js
+init_authService();
+async function recordVisitController(request, env) {
+  try {
+    await recordVisit(env);
+    return Response.json({
+      message: "Visit recorded"
+    });
+  } catch (error) {
+    console.error("Record visit error:", error);
+    return Response.json(
+      { error: "Unable to record visit" },
+      { status: 500 }
+    );
+  }
+}
+__name(recordVisitController, "recordVisitController");
+async function getAnalyticsController(request, env) {
+  const token = getSessionToken(request);
+  if (!token) {
+    return Response.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+  const user = await getUserFromSession(env, token);
+  if (!user) {
+    return Response.json(
+      { error: "Invalid or expired session" },
+      { status: 401 }
+    );
+  }
+  if (user.role !== "admin") {
+    return Response.json(
+      { error: "Admin access required" },
+      { status: 403 }
+    );
+  }
+  const url = new URL(request.url);
+  const requestedRange = Number(
+    url.searchParams.get("range")
+  );
+  const allowedRanges = [7, 30, 90, 180, 365];
+  const range = allowedRanges.includes(requestedRange) ? requestedRange : 7;
+  try {
+    const [stats, daily] = await Promise.all([
+      getVisitStats(env),
+      getDailyVisits(env, range)
+    ]);
+    return Response.json({
+      stats,
+      daily,
+      range
+    });
+  } catch (error) {
+    console.error("Get analytics error:", error);
+    return Response.json(
+      { error: "Unable to retrieve analytics" },
+      { status: 500 }
+    );
+  }
+}
+__name(getAnalyticsController, "getAnalyticsController");
+async function refreshInstagramStatsController(request, env) {
+  const token = getSessionToken(request);
+  if (!token) {
+    return Response.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+  const user = await getUserFromSession(env, token);
+  if (!user) {
+    return Response.json(
+      { error: "Invalid or expired session" },
+      { status: 401 }
+    );
+  }
+  if (user.role !== "admin") {
+    return Response.json(
+      { error: "Admin access required" },
+      { status: 403 }
+    );
+  }
+  try {
+    const stats = await refreshInstagramStats(env);
+    if (!stats) {
+      return Response.json(
+        {
+          error: "Unable to fetch latest Instagram statistics"
+        },
+        { status: 502 }
+      );
+    }
+    return Response.json({
+      message: "Instagram statistics refreshed successfully",
+      stats
+    });
+  } catch (error) {
+    console.error(
+      "Manual Instagram refresh error:",
+      error
+    );
+    return Response.json(
+      {
+        error: "Unable to refresh Instagram statistics"
+      },
+      { status: 500 }
+    );
+  }
+}
+__name(refreshInstagramStatsController, "refreshInstagramStatsController");
+
+// src/routes/adminRoutes.js
+async function handleAdminRoute(request, env) {
+  const url = new URL(request.url);
+  if (request.method === "POST" && url.pathname === "/api/admin/analytics/visit") {
+    return recordVisitController(request, env);
+  }
+  if (request.method === "POST" && url.pathname === "/api/admin/instagram/refresh") {
+    return refreshInstagramStatsController(
+      request,
+      env
+    );
+  }
+  if (request.method === "GET" && url.pathname === "/api/admin/analytics") {
+    return getAnalyticsController(request, env);
+  }
   return null;
 }
-__name(fetchAndStoreStats, "fetchAndStoreStats");
+__name(handleAdminRoute, "handleAdminRoute");
+
+// src/workers/worker.js
 var worker_default = {
   async scheduled(controller, env, ctx) {
-    ctx.waitUntil(fetchAndStoreStats(env));
+    ctx.waitUntil(refreshInstagramStats(env));
   },
   async fetch(request, env) {
+    const adminResponse = await handleAdminRoute(
+      request,
+      env
+    );
+    if (adminResponse) {
+      return adminResponse;
+    }
     const authResponse = await handleAuthRoute(request, env);
     if (authResponse) {
       return authResponse;
@@ -1922,7 +2668,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-DnkKwa/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-X8i4Q9/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -1955,7 +2701,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-DnkKwa/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-X8i4Q9/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

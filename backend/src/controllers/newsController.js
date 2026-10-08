@@ -104,6 +104,7 @@ export async function createNewsController(request, env) {
       details: JSON.stringify({
         title: result.news.title,
         automaticallyDeletedIds: result.deletedIds,
+        imageDeletionResults: result.imageDeletionResults,
       }),
     });
 
@@ -184,10 +185,10 @@ export async function updateNewsController(request, env) {
   const content = body.content?.trim();
   const image = body.image?.trim() || null;
 
-  if (!title || (!content && !image)) {
+  if (!title || !content) {
     return Response.json(
       {
-        error: "Title and either content or image are required",
+        error: "Title and content are required",
       },
       { status: 400 }
     );
@@ -219,6 +220,7 @@ export async function updateNewsController(request, env) {
       entityId: newsId,
       details: JSON.stringify({
         title: result.news.title,
+        imageDeletion: result.imageDeletion,
       }),
     });
 
@@ -297,6 +299,7 @@ export async function deleteNewsController(request, env) {
       entityId: newsId,
       details: JSON.stringify({
         title: news.title,
+        imageDeletion: news.imageDeletion,
       }),
     });
 
@@ -387,8 +390,8 @@ export async function toggleNewsPinController(
         title: result.news.title,
         previousPinned: result.previousPinned,
         pinned: result.pinned,
-        automaticallyDeletedIds:
-          result.deletedIds,
+        automaticallyDeletedIds: result.deletedIds,
+        imageDeletionResults: result.imageDeletionResults,
       }),
     });
 

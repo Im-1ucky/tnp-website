@@ -9,6 +9,8 @@ import {
   getSessionToken,
 } from "../utils/cookies.js";
 
+import { createAuditLog } from "../services/auditService.js";
+
 const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days
 
 // =========================
@@ -42,6 +44,13 @@ export async function login(request, env) {
       );
     }
 
+    await createAuditLog(env, {
+      userId: result.user.id,
+      action: "LOGIN",
+      entityType: "user",
+      entityId: result.user.id,
+    });
+
     const headers = new Headers({
       "Content-Type": "application/json",
     });
@@ -49,7 +58,8 @@ export async function login(request, env) {
     setSessionCookie(
       headers,
       result.token,
-      SESSION_DURATION
+      SESSION_DURATION,
+      request
     );
 
     return new Response(
@@ -86,7 +96,7 @@ export async function logout(request, env) {
       "Content-Type": "application/json",
     });
 
-    clearSessionCookie(headers);
+    clearSessionCookie(headers, request);
 
     return new Response(
       JSON.stringify({

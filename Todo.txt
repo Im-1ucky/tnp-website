@@ -1,5 +1,3 @@
-8. Admin page with analytics
-
 Suggested by Chatgpt
 Fix News backend to allow image-only News, since content is currently required by the controller.
 Verify/protect the audit-log endpoint so only admins can access it.

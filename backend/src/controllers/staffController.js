@@ -3,6 +3,7 @@ import {
   getAllStaff,
   updateStaffRole,
   resetStaffPassword,
+  deleteStaff,
 } from "../services/staffService.js";
 
 import { getSessionToken } from "../utils/cookies.js";
@@ -46,6 +47,131 @@ export async function getStaffController(request, env) {
 
     return Response.json(
       { error: "Unable to retrieve staff" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function deleteStaffController(
+  request,
+  env
+) {
+  const token = getSessionToken(request);
+
+  if (!token) {
+    return Response.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+
+  const user =
+    await getUserFromSession(
+      env,
+      token
+    );
+
+  if (!user) {
+    return Response.json(
+      {
+        error:
+          "Invalid or expired session",
+      },
+      { status: 401 }
+    );
+  }
+
+  if (user.role !== "admin") {
+    return Response.json(
+      {
+        error:
+          "Admin access required",
+      },
+      { status: 403 }
+    );
+  }
+
+  const url = new URL(request.url);
+
+  const parts =
+    url.pathname.split("/");
+
+  const userId =
+    Number(parts[3]);
+
+  if (
+    !Number.isInteger(userId) ||
+    userId <= 0
+  ) {
+    return Response.json(
+      {
+        error:
+          "Invalid staff ID",
+      },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const result =
+      await deleteStaff(
+        env,
+        userId,
+        user.id
+      );
+
+    if (result.error) {
+      return Response.json(
+        {
+          error: result.error,
+        },
+        {
+          status:
+            result.status || 400,
+        }
+      );
+    }
+
+    /*
+     * Record this AFTER the deletion.
+     *
+     * user.id = admin who performed deletion
+     * result.staff = account that was deleted
+     */
+    await createAuditLog(
+      env,
+      {
+        userId: user.id,
+        action: "DELETE_STAFF",
+        entityType: "staff",
+        entityId: result.staff.id,
+        details: JSON.stringify({
+          deletedName:
+            result.staff.name,
+          deletedEmail:
+            result.staff.email,
+          deletedRole:
+            result.staff.role,
+        }),
+      }
+    );
+
+    return Response.json({
+      message:
+        "Staff account deleted successfully",
+      staff: result.staff,
+    });
+  } catch (error) {
+    console.error(
+      "Delete staff error:",
+      error
+    );
+
+    return Response.json(
+      {
+        error:
+          "Failed to delete staff account",
+      },
       { status: 500 }
     );
   }
