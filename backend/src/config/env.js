@@ -1,4 +1,4 @@
-import "dotenv/config";
+
 
 const { INSTAGRAM_ACCESS_TOKEN } = process.env;
 
