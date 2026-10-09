@@ -1,6 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
 
-@import "tailwindcss";
 /* =========================================================
    TNP DESIGN SYSTEM
    Shared across the entire website
@@ -309,24 +308,6 @@ ol {
 
 
 /* =========================================================
-   GLASS
-========================================================= */
-
-.glass {
-  background: var(--color-glass);
-
-  border: 1px solid var(--color-border);
-
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease;
-}
-
-
-/* =========================================================
    BUTTONS
 ========================================================= */
 
@@ -406,38 +387,6 @@ ol {
 
   transform: translateY(-3px);
 }
-
-
-/* =========================================================
-   REVEAL ANIMATION
-   Used by sections across the website
-========================================================= */
-
-.reveal {
-  opacity: 0;
-
-  transform: translateY(28px);
-
-  filter: blur(4px);
-
-  transition:
-    opacity 0.8s var(--ease),
-    transform 0.8s var(--ease),
-    filter 0.8s var(--ease);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-
-  transform: translateY(0);
-
-  filter: blur(0);
-}
-
-.stagger > * {
-  transition-delay: calc(var(--i, 0) * 70ms);
-}
-
 
 /* =========================================================
    REDUCED MOTION
