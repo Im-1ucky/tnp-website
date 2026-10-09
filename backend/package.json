@@ -1,12 +1,8 @@
 {
   "name": "backend",
-  "module": "index.js",
-  "type": "module",
-  "private": true,
-  "dependencies": {
-    "express": "^5.2.1"
-  },
   "devDependencies": {
     "wrangler": "^4.147.0"
-  }
+  },
+  "private": true,
+  "type": "module"
 }
