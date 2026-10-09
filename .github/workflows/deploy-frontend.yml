@@ -1,12 +1,12 @@
 name: Deploy T&P Frontend
 
 on:
-  push:
+  workflow_run:
+    workflows: ["T&P Tests"]
+    types:
+      - completed
     branches:
       - main
-    paths:
-      - "frontend/**"
-      - ".github/workflows/deploy-frontend.yml"
   workflow_dispatch:
 
 permissions:
@@ -19,14 +19,24 @@ concurrency:
 jobs:
   deploy:
     name: Build and Deploy
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.event == 'push'
+        )
+      }}
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
 
     steps:
-      - name: Checkout repository
+      - name: Checkout tested commit
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
