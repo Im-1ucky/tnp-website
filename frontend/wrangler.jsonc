@@ -1,8 +1,17 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "tnp-website",
+  "main": "src/worker.js",
   "compatibility_date": "2026-10-06",
+  "services": [
+    {
+      "binding": "API",
+      "service": "tnp-api"
+    }
+  ],
   "assets": {
-    "not_found_handling": "single-page-application"
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api", "/api/*"]
   }
 }

@@ -172,7 +172,7 @@ function Events() {
     async function fetchInstagramStats() {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/instagram/stats"
+          "/api/instagram/stats"
         );
 
         if (!response.ok) {
