@@ -1,5 +1,8 @@
 {
   "name": "backend",
+  "scripts": {
+    "test": "bun test"
+  },
   "devDependencies": {
     "wrangler": "^4.147.0"
   },
