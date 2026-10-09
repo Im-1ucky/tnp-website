@@ -56,8 +56,13 @@ function Navbar({ onEasterEgg }) {
   const { isAdmin } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState("dark");
   const [activeSection, setActiveSection] = useState("home");
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("tp_theme");
+    return savedTheme === "light" || savedTheme === "dark"
+      ? savedTheme
+      : "dark";
+  });
 
   /* ---------- Easter egg ---------- */
 
@@ -92,24 +97,11 @@ function Navbar({ onEasterEgg }) {
     };
   }, []);
 
-  /* ---------- Load saved theme ---------- */
+  /* ---------- Apply theme ---------- */
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("tp_theme");
-
-    if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute(
-        "data-theme",
-        savedTheme
-      );
-    } else {
-      document.documentElement.setAttribute(
-        "data-theme",
-        "dark"
-      );
-    }
-  }, []);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   /* ---------- Navbar scroll state ---------- */
 

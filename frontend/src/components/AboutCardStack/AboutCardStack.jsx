@@ -1,27 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "./AboutCardStack.css";
 
 function AboutCardStack({ cards, mobile = false }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [showHint, setShowHint] = useState(false);
+  const [showHint, setShowHint] = useState(
+    () => !sessionStorage.getItem("about_card_stack_hint")
+  );
 
   const startX = useRef(0);
   const moved = useRef(false);
-
-  /*
-   * Show the drag hint only once per browser session.
-   */
-  useEffect(() => {
-    const hintShown = sessionStorage.getItem(
-      "about_card_stack_hint"
-    );
-
-    if (!hintShown) {
-      setShowHint(true);
-    }
-  }, []);
 
   const markInteracted = () => {
     sessionStorage.setItem(
