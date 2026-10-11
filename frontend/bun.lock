@@ -5,6 +5,7 @@
     "": {
       "name": "frontend",
       "dependencies": {
+        "@icons-pack/react-simple-icons": "^13.15.1",
         "embla-carousel-react": "^8.6.0",
         "embla-carousel-wheel-gestures": "^8.1.0",
         "lucide-react": "^1.50.0",
@@ -160,6 +161,8 @@
     "@humanwhocodes/module-importer": ["@humanwhocodes/module-importer@1.0.1", "", {}, "sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA=="],
 
     "@humanwhocodes/retry": ["@humanwhocodes/retry@0.4.3", "", {}, "sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ=="],
+
+    "@icons-pack/react-simple-icons": ["@icons-pack/react-simple-icons@13.15.1", "", { "peerDependencies": { "react": "^16.13 || ^17 || ^18 || ^19" } }, "sha512-S35E7vJlJzMeoqjwwI7ZmQUJ2W+2KspnB6bc49KdoDGwp5mCgAy9L3sscfWMewQSMgBdPU8KWWwpSGq5DJyAFw=="],
 
     "@img/colour": ["@img/colour@1.1.0", "", {}, "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ=="],
 

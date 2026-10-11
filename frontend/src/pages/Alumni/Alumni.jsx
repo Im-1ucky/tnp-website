@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { alumni } from "../../data/members/alumni";
 import "./Alumni.css";
 
@@ -94,16 +95,11 @@ function AlumniCard({ member, onClose }) {
           onClick={onClose}
           aria-label="Close alumni profile"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
+          <X
+            size={20}
+            strokeWidth={1.8}
             aria-hidden="true"
-          >
-            <path d="M6 6l12 12" />
-            <path d="M18 6L6 18" />
-          </svg>
+          />
         </button>
 
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { SiInstagram } from "@icons-pack/react-simple-icons";
 import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { events } from "../../data/events";
@@ -264,36 +265,11 @@ function Events() {
             target="_blank"
             rel="noreferrer"
           >
-            <svg
+            <SiInstagram
               className="instagram-follow-icon"
-              viewBox="0 0 24 24"
+              size={21}
               aria-hidden="true"
-            >
-              <rect
-                x="3"
-                y="3"
-                width="18"
-                height="18"
-                rx="5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              <circle
-                cx="12"
-                cy="12"
-                r="4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              <circle
-                cx="17.5"
-                cy="6.5"
-                r="1"
-                fill="currentColor"
-              />
-            </svg>
+            />
 
             <span>Follow @tnpclub_gprec</span>
           </a>

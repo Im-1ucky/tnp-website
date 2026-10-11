@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 462 462">
+  <rect
+    x="15"
+    y="5"
+    width="422"
+    height="422"
+    rx="100"
+    fill="#1769ff"
+    stroke="#438aff"
+    stroke-width="10"
+  />
+  <text
+    x="231"
+    y="267"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="150"
+    font-weight="900"
+    letter-spacing="-8"
+    fill="#ffffff"
+  >T&amp;P</text>
+</svg>

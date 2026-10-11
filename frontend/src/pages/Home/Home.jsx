@@ -1,20 +1,6 @@
+import { ArrowRight } from "lucide-react";
 import Navbar from "../../components/Navbar/Navbar";
 import "./Home.css";
-
-function ArrowIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      <path d="M5 12h14" />
-      <path d="m13 6 6 6-6 6" />
-    </svg>
-  );
-}
 
 function Home({ onEasterEgg }) {
   return (
@@ -67,12 +53,12 @@ function Home({ onEasterEgg }) {
             <div className="hero-ctas hero-anim-5">
               <a href="#about" className="btn btn-primary">
                 Explore Our Club
-                <ArrowIcon />
+                <ArrowRight aria-hidden="true" />
               </a>
 
               <a href="#teams" className="btn btn-ghost">
                 Meet Our Team
-                <ArrowIcon />
+                <ArrowRight aria-hidden="true" />
               </a>
             </div>
           </div>

@@ -445,8 +445,6 @@
 }
 
 .instagram-follow:hover {
-  transform: translateY(-1px);
-
   box-shadow:
     0 10px 28px rgba(214, 41, 118, 0.3);
 }
@@ -454,8 +452,9 @@
 .instagram-follow-icon {
   width: 21px;
   height: 21px;
-
   flex-shrink: 0;
+  display: block;
+  transform: translateY(-1px);
 }
 
 
