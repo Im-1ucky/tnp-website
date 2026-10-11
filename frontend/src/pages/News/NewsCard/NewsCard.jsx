@@ -13,12 +13,17 @@ function NewsCard({ news, onClick }) {
         }
       }}
     >
+
       {news.image && (
         <div className="news-card-image-wrapper">
           <img
             src={news.image}
             alt=""
             className="news-card-image"
+            loading="lazy"
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+            }}
           />
         </div>
       )}

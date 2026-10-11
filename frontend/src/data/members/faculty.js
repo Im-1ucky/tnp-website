@@ -6,50 +6,20 @@ export const SHOW_FACULTY = true;   //Changing this to false will remove the fac
 export const faculty = [
   {
     id: "faculty-01",
-    name: "Dr. Arun Kumar",
-    department: "CSD",
-    role: "Training & Placement Officer",
+    name: "Dr. Y. Chitra Rekha",
+    department: "H&BS",
+    role: "Convenor",
   },
   {
     id: "faculty-02",
-    name: "Dr. Priya Sharma",
+    name: "Sri. C. V. Chakradhar",
     department: "CSE",
-    role: "Faculty Coordinator",
+    role: "Faculty Member",
   },
   {
     id: "faculty-03",
-    name: "Dr. Ravi Kumar",
-    department: "ECE",
-    role: "Faculty Coordinator",
-  },
-  {
-    id: "faculty-04",
-    name: "Dr. Anitha Reddy",
-    department: "EEE",
-    role: "Faculty Coordinator",
-  },
-  {
-    id: "faculty-05",
-    name: "Dr. Arun Kumar",
-    department: "CSD",
-    role: "Training & Placement Officer",
-  },
-  {
-    id: "faculty-06",
-    name: "Dr. Priya Sharma",
-    department: "CSE",
-    role: "Faculty Coordinator",
-  },
-  {
-    id: "faculty-07",
-    name: "Dr. Ravi Kumar",
-    department: "ECE",
-    role: "Faculty Coordinator",
-  },
-  {
-    id: "faculty-08",
-    name: "Dr. Anitha Reddy",
-    department: "EEE",
-    role: "Faculty Coordinator",
+    name: "Sri. M. Mahesh Kumar",
+    department: "CSM",
+    role: "Faculty Member",
   },
 ];

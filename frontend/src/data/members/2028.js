@@ -34,7 +34,7 @@ export const members2028 = [
   {
     id: "2028-05",
     name: "Boya Venkatesh",
-    department: "MECH",
+    department: "MEC",
     rollNo: "249XA03060",
     graduationYear: 2028,
     team: "Designing Team",
@@ -58,7 +58,7 @@ export const members2028 = [
   {
     id: "2028-08",
     name: "Saginala Praneeth",
-    department: "MECH",
+    department: "MEC",
     rollNo: "249XA03087",
     graduationYear: 2028,
     team: "Drafting Team",

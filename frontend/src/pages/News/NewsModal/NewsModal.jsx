@@ -91,12 +91,16 @@ function NewsModal({
           <X size={18} strokeWidth={2} />
         </button>
 
+
         {news.image && (
           <div className="news-modal-image-wrapper">
             <img
               src={news.image}
               alt=""
               className="news-modal-image"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
             />
           </div>
         )}

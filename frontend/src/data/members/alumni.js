@@ -7,7 +7,7 @@ export const alumni = [
   {
     id: 1,
     name: "Rahul Reddy",
-    image: "/assets/Batches/2028/249XA01020.png",
+    image: null,
     department: "Computer Science and Engineering",
     yearOfPassing: "2027",
     company: "Google",
@@ -19,7 +19,7 @@ export const alumni = [
   {
     id: 2,
     name: "Sneha Varma",
-    image: "/assets/Batches/2028/249XA01020.png",
+    image: null,
     department: "Electronics and Communication Engineering",
     yearOfPassing: "2027",
     company: "Microsoft",
@@ -42,7 +42,7 @@ export const alumni = [
   {
     id: 4,
     name: "Ananya Reddy",
-    image: "/assets/Batches/2028/249XA01020.png",
+    image: null,
     department: "Electrical and Electronics Engineering",
     yearOfPassing: "2026",
     story:

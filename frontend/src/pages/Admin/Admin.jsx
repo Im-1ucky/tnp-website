@@ -1,7 +1,6 @@
 import {
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 
@@ -10,7 +9,6 @@ import {
   ArrowDown,
   ArrowUp,
   Check,
-  CheckSquare,
   KeyRound,
   Plus,
   RefreshCw,
@@ -62,16 +60,6 @@ function Admin() {
   });
 
   const [resetPassword, setResetPassword] = useState("");
-
-  /* ==============================
-     AUDIT LOG SELECTION
-  ============================== */
-
-  const [selectedLogIds, setSelectedLogIds] = useState([]);
-  const [selectingLogs, setSelectingLogs] = useState(false);
-  const [deletingLogs, setDeletingLogs] = useState(false);
-
-  const logPressTimer = useRef(null);
 
   /* ==============================
      REDIRECT
@@ -167,14 +155,6 @@ function Admin() {
       setStaff(staffData.staff || []);
       setLogs(logsData.logs || []);
 
-      // Remove selections that no longer exist.
-      setSelectedLogIds((current) =>
-        current.filter((id) =>
-          (logsData.logs || []).some(
-            (log) => Number(log.id) === Number(id)
-          )
-        )
-      );
     } catch (err) {
       console.error(
         "Failed to load admin dashboard:",
@@ -486,161 +466,6 @@ function Admin() {
       setActionLoading(null);
     }
   };
-
-  /* ==============================
-     AUDIT LOG SELECTION
-  ============================== */
-
-  function startLogSelection(logId) {
-    setSelectingLogs(true);
-
-    setSelectedLogIds((current) => {
-      if (current.includes(logId)) {
-        return current;
-      }
-
-      return [...current, logId];
-    });
-  }
-
-  function toggleLogSelection(logId) {
-    setSelectedLogIds((current) => {
-      if (current.includes(logId)) {
-        return current.filter(
-          (id) => id !== logId
-        );
-      }
-
-      return [...current, logId];
-    });
-  }
-
-  function handleLogPointerDown(logId) {
-    if (selectingLogs) {
-      return;
-    }
-
-    clearLogPressTimer();
-
-    logPressTimer.current = setTimeout(() => {
-      startLogSelection(logId);
-    }, 600);
-  }
-
-  function handleLogPointerUp() {
-    clearLogPressTimer();
-  }
-
-  function handleLogPointerLeave() {
-    clearLogPressTimer();
-  }
-
-  function clearLogPressTimer() {
-    if (logPressTimer.current) {
-      clearTimeout(logPressTimer.current);
-      logPressTimer.current = null;
-    }
-  }
-
-  function handleLogContextMenu(event) {
-    if (selectingLogs) {
-      event.preventDefault();
-    }
-  }
-
-  function handleLogClick(logId) {
-    if (!selectingLogs) {
-      return;
-    }
-
-    toggleLogSelection(logId);
-  }
-
-  function handleSelectAllLogs() {
-    if (selectedLogIds.length === logs.length) {
-      setSelectedLogIds([]);
-      return;
-    }
-
-    setSelectedLogIds(
-      logs.map((log) => Number(log.id))
-    );
-  }
-
-  function cancelLogSelection() {
-    clearLogPressTimer();
-    setSelectingLogs(false);
-    setSelectedLogIds([]);
-  }
-
-  async function handleDeleteSelectedLogs() {
-    if (
-      deletingLogs ||
-      selectedLogIds.length === 0
-    ) {
-      return;
-    }
-
-    const confirmed = window.confirm(
-      `Delete ${selectedLogIds.length} selected audit ${
-        selectedLogIds.length === 1
-          ? "log"
-          : "logs"
-      }?\n\nThis action cannot be undone.`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    setDeletingLogs(true);
-    setError("");
-
-    try {
-      const response = await fetch(
-        "/api/audit-logs",
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            ids: selectedLogIds,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.error ||
-            "Unable to delete audit logs."
-        );
-      }
-
-      cancelLogSelection();
-
-      await fetchDashboardData();
-    } catch (err) {
-      console.error(
-        "Delete audit logs failed:",
-        err
-      );
-
-      setError(
-        err.message ||
-          "Unable to delete audit logs."
-      );
-    } finally {
-      setDeletingLogs(false);
-    }
-  }
-
-  const allLogsSelected =
-    logs.length > 0 &&
-    selectedLogIds.length === logs.length;
 
   /* ==============================
      STAFF COUNTS
@@ -1258,122 +1083,16 @@ function Admin() {
                   </h2>
                 </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {selectingLogs ? (
-                    <>
-                      <button
-                        type="button"
-                        className="admin-primary-button"
-                        onClick={
-                          handleSelectAllLogs
-                        }
-                        disabled={
-                          logs.length === 0 ||
-                          deletingLogs
-                        }
-                      >
-                        <CheckSquare
-                          size={17}
-                        />
-
-                        {allLogsSelected
-                          ? "Deselect All"
-                          : "Select All"}
-                      </button>
-
-                      <button
-                        type="button"
-                        className="admin-primary-button"
-                        onClick={
-                          handleDeleteSelectedLogs
-                        }
-                        disabled={
-                          selectedLogIds.length ===
-                            0 ||
-                          deletingLogs
-                        }
-                      >
-                        <Trash2
-                          size={17}
-                        />
-
-                        {deletingLogs
-                          ? "Deleting..."
-                          : `Delete Selected${
-                              selectedLogIds.length
-                                ? ` (${selectedLogIds.length})`
-                                : ""
-                            }`}
-                      </button>
-
-                      <button
-                        type="button"
-                        className="admin-back-button"
-                        onClick={
-                          cancelLogSelection
-                        }
-                        disabled={
-                          deletingLogs
-                        }
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <span className="admin-log-count">
-                      {logs.length} logs
-                    </span>
-                  )}
-                </div>
+                <span className="admin-log-count">
+                  {logs.length} logs
+                </span>
               </div>
-
-              {selectingLogs && (
-                <div
-                  style={{
-                    marginBottom: "12px",
-                    fontSize: "0.85rem",
-                    opacity: 0.7,
-                  }}
-                >
-                  {selectedLogIds.length} of{" "}
-                  {logs.length} selected
-                </div>
-              )}
-
-              {!selectingLogs && logs.length > 0 && (
-                <div
-                  style={{
-                    marginBottom: "12px",
-                    fontSize: "0.85rem",
-                    opacity: 0.65,
-                  }}
-                >
-                  Long-press a log to select logs
-                  for deletion.
-                </div>
-              )}
 
               <div className="admin-log-table-wrapper">
                 <table className="admin-log-table">
 
                   <thead>
                     <tr>
-                      {selectingLogs && (
-                        <th
-                          style={{
-                            width: "45px",
-                          }}
-                        >
-                          #
-                        </th>
-                      )}
 
                       <th>
                         Time
@@ -1402,81 +1121,15 @@ function Admin() {
                     {logs.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={
-                            selectingLogs
-                              ? 6
-                              : 5
-                          }
+                          colSpan={5}
                           className="admin-empty"
                         >
                           No audit logs yet.
                         </td>
                       </tr>
                     ) : (
-                      logs.map((log) => {
-                        const isSelected =
-                          selectedLogIds.includes(
-                            Number(log.id)
-                          );
-
-                        return (
-                          <tr
-                            key={log.id}
-                            onPointerDown={() =>
-                              handleLogPointerDown(
-                                Number(log.id)
-                              )
-                            }
-                            onPointerUp={
-                              handleLogPointerUp
-                            }
-                            onPointerCancel={
-                              handleLogPointerUp
-                            }
-                            onPointerLeave={
-                              handleLogPointerLeave
-                            }
-                            onClick={() =>
-                              handleLogClick(
-                                Number(log.id)
-                              )
-                            }
-                            onContextMenu={
-                              handleLogContextMenu
-                            }
-                            style={{
-                              cursor:
-                                selectingLogs
-                                  ? "pointer"
-                                  : "default",
-
-                              background:
-                                isSelected
-                                  ? "rgba(255, 255, 255, 0.06)"
-                                  : undefined,
-                            }}
-                          >
-
-                            {selectingLogs && (
-                              <td>
-                                <input
-                                  type="checkbox"
-                                  checked={
-                                    isSelected
-                                  }
-                                  onChange={() =>
-                                    toggleLogSelection(
-                                      Number(
-                                        log.id
-                                      )
-                                    )
-                                  }
-                                  onClick={(event) =>
-                                    event.stopPropagation()
-                                  }
-                                />
-                              </td>
-                            )}
+                      logs.map((log) => (
+                        <tr key={log.id}>
 
                             <td>
                               {formatDate(
@@ -1517,9 +1170,8 @@ function Admin() {
                               )}
                             </td>
 
-                          </tr>
-                        );
-                      })
+                        </tr>
+                      ))
                     )}
 
                   </tbody>

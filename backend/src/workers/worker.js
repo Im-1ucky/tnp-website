@@ -7,14 +7,31 @@ import { handleAuditRoute } from "../routes/auditRoutes.js";
 import { handleNewsRoute } from "../routes/newsRoutes.js";
 import { handleUploadRoute } from "../routes/uploadRoutes.js";
 import { handleAdminRoute } from "../routes/adminRoutes.js";
+import { cleanupOldAuditLogs } from "../services/auditService.js";
 
 const STATS_KEY = "instagram_stats";
 
 
 export default {
+
   async scheduled(controller, env, ctx) {
-    ctx.waitUntil(refreshInstagramStats(env));
+    // Refresh Instagram stats every hour.
+    ctx.waitUntil(
+      refreshInstagramStats(env).catch((error) => {
+        console.error("Instagram stats refresh failed:", error);
+      })
+    );
+
+    // Clean up audit logs only at midnight UTC.
+    if (controller.cron === "0 0 * * *") {
+      ctx.waitUntil(
+        cleanupOldAuditLogs(env).catch((error) => {
+          console.error("Audit log cleanup failed:", error);
+        })
+      );
+    }
   },
+
 
   async fetch(request, env) {
 

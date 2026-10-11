@@ -50,7 +50,7 @@ export const members2027 = [
   {
     id: "2027-07",
     name: "Shaik Zaid Al Basshar",
-    department: "MECH",
+    department: "MEC",
     rollNo: "239X1A0369",
     graduationYear: 2027,
     team: "Drafting Team",
@@ -162,7 +162,7 @@ export const members2027 = [
   {
     id: "2027-21",
     name: "Paggala Yeshwanth",
-    department: "MECH",
+    department: "MEC",
     rollNo: "239X1A0344",
     graduationYear: 2027,
     team: "Gateway & Outreach Team",

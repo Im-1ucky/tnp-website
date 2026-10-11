@@ -1043,26 +1043,6 @@
   }
 }
 
-/* ==============================
-   AUDIT LOG SELECTION
-============================== */
-
-.admin-log-table tbody tr {
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.admin-log-table tbody tr input[type="checkbox"] {
-  width: 17px;
-  height: 17px;
-  cursor: pointer;
-  accent-color: currentColor;
-}
-
-.admin-log-table tbody tr {
-  transition: background 0.15s ease;
-}
-
 .admin-danger-button {
   display: inline-flex;
   align-items: center;
