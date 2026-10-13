@@ -311,28 +311,34 @@
   color: var(--color-text);
 }
 
+
 .admin-chart {
   height: 230px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 
   display: flex;
   align-items: flex-end;
 
-  gap: 4px;
-
+  gap: 2px;
   padding: 0 4px;
 
   border-bottom: 1px solid var(--color-border);
+
+  overflow: hidden;
 }
 
 .admin-chart-bar {
-  flex: 1;
+  flex: 1 1 0;
   height: 100%;
 
   display: flex;
   align-items: flex-end;
 
-  min-width: 2px;
+  min-width: 0;
 }
+
 
 .admin-chart-bar-fill {
   width: 100%;
