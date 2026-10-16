@@ -88,10 +88,10 @@ Open another terminal:
 ```bash
 cd backend
 bun install
-bun --watch src/workers/worker.js
+bunx wrangler dev
 ```
 
-Configure the required local environment variables and bindings before testing API functionality. Refer to the Wrangler configuration and backend code for the required settings.
+Configure the required local environment variables and bindings before testing API functionality. Refer to wrangler.jsonc and the backend code for the required settings.
 
 ## 🔐 Security & Configuration
 
